@@ -39,19 +39,22 @@ const Services = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map((service, index) => (
-            <Card key={index} className="bg-card border-border hover-lift group transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10">
-              <CardContent className="p-8 text-center">
-                <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                  <service.icon className="h-10 w-10 text-primary" />
-                </div>
-                <h3 className="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors duration-300">
-                  {service.title}
-                </h3>
-                <p className="text-foreground/70 leading-relaxed text-lg">{service.description}</p>
-              </CardContent>
-            </Card>
-          ))}
+          {services.map((service, index) => {
+            const IconComponent = service.icon;
+            return (
+              <Card key={index} className="bg-card border-border hover-lift group transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10">
+                <CardContent className="p-8 text-center">
+                  <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                    <IconComponent className="h-10 w-10 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors duration-300">
+                    {service.title}
+                  </h3>
+                  <p className="text-foreground/70 leading-relaxed text-lg">{service.description}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>

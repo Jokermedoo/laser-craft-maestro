@@ -7,10 +7,6 @@ import CTA from '@/components/landing/CTA';
 import Footer from '@/components/landing/Footer';
 import Services from '@/components/landing/Services';
 import Navbar from '@/components/landing/Navbar';
-import Testimonials from '@/components/landing/Testimonials';
-import FAQ from '@/components/landing/FAQ';
-import Pricing from '@/components/landing/Pricing';
-import HowItWorks from '@/components/landing/HowItWorks';
 import ContactForm from '@/components/landing/ContactForm';
 import BackToTop from '@/components/ui/BackToTop';
 
@@ -23,11 +19,7 @@ const Index = () => {
         <About />
         <Services />
         <Gallery />
-        <HowItWorks />
-        <Pricing />
         <Features />
-        <Testimonials />
-        <FAQ />
         <ContactForm />
         <CTA />
       </main>

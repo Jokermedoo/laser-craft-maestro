@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageSquare, Phone, MapPin, Clock, Mail, Send } from 'lucide-react';
+import { MessageSquare, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
 const ContactForm = () => {
