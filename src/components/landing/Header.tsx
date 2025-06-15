@@ -20,8 +20,8 @@ const Header = () => {
         <h1 className="text-5xl md:text-7xl font-black text-foreground uppercase tracking-wider drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
           المعز لخدمات الليزر
         </h1>
-        <p className="mt-4 text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
-          تفاصيل محفورة بالليزر... تحفتك تبقى قطعة فنية
+        <p className="mt-4 text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
+          أقوى تصميمات الدعاية والإعلان والهدايا والتحف والانتيكات
         </p>
         <div className="mt-10">
           <Button asChild size="lg" className="text-lg py-8 px-10 rounded-lg shadow-lg transition-transform transform hover:scale-105">
