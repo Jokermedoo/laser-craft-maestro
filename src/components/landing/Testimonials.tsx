@@ -6,73 +6,51 @@ import { Star, Quote } from 'lucide-react';
 const testimonials = [
   {
     name: "أحمد محمد",
-    role: "صاحب محل تجاري",
-    content: "الجودة ممتازة والدقة في العمل لا تضاهى. صنعوا لي لافتة محلي وأصبحت معلم مميز في المنطقة. أنصح بشدة بالتعامل معهم.",
-    rating: 5,
-    location: "الأقصر"
+    role: "صاحب مطعم",
+    content: "خدمة ممتازة وجودة عالية في نقش لوحة المطعم. النتيجة فاقت توقعاتي تماماً.",
+    rating: 5
   },
   {
-    name: "فاطمة السيد",
-    role: "عميلة - هدايا مخصصة",
-    content: "طلبت هدايا مخصصة لحفل زفافي وكانت النتيجة أكثر من رائعة. الفريق محترف جداً وملتزم بالمواعيد. شكراً لكم على الإبداع.",
-    rating: 5,
-    location: "قنا"
+    name: "فاطمة علي", 
+    role: "مصممة ديكور",
+    content: "تعاملت معهم في عدة مشاريع والنتيجة دائماً مثالية. سرعة في التنفيذ ودقة في العمل.",
+    rating: 5
   },
   {
-    name: "محمود عبدالله",
-    role: "مهندس ديكور",
-    content: "أتعامل معهم في مشاريع الديكور الداخلي. الدقة والجودة العالية في قطع الأكريليك والخشب تجعلهم الخيار الأول لي دائماً.",
-    rating: 5,
-    location: "أسوان"
-  },
-  {
-    name: "نورهان أحمد",
-    role: "مديرة شركة",
-    content: "صنعوا لنا درع الشركة وميداليات التكريم. العمل احترافي والتصميم فريد. سعداء جداً بالتعامل معكم.",
-    rating: 5,
-    location: "الأقصر"
+    name: "محمود حسن",
+    role: "مدير شركة",
+    content: "أفضل ورشة ليزر في المحافظة. أسعار مناسبة وخدمة عملاء ممتازة.",
+    rating: 5
   }
 ];
 
 const Testimonials = () => {
   return (
-    <section id="testimonials" className="py-20 bg-card">
+    <section className="py-20 bg-card">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-foreground mb-4">آراء عملائنا</h2>
+          <h2 className="text-4xl font-bold text-foreground mb-4">آراء العملاء</h2>
           <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
-            نفخر بثقة عملائنا وآرائهم الإيجابية في خدماتنا المتميزة
+            ما يقوله عملاؤنا الكرام عن خدماتنا وجودة أعمالنا
           </p>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-background border-2 border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10">
-              <CardContent className="p-8">
-                <div className="flex items-center mb-4">
-                  <Quote className="h-8 w-8 text-primary ml-3" />
-                  <div className="flex space-x-1 rtl:space-x-reverse">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-primary text-primary" />
-                    ))}
-                  </div>
+            <Card key={index} className="bg-background border-border hover-lift">
+              <CardContent className="p-6">
+                <Quote className="h-8 w-8 text-primary mb-4" />
+                <p className="text-foreground/80 mb-6 leading-relaxed">"{testimonial.content}"</p>
+                
+                <div className="flex items-center mb-3">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                  ))}
                 </div>
                 
-                <p className="text-foreground/90 leading-relaxed mb-6 text-lg">
-                  "{testimonial.content}"
-                </p>
-                
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center ml-4">
-                    <span className="text-primary font-bold text-lg">
-                      {testimonial.name.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-foreground">{testimonial.name}</h4>
-                    <p className="text-foreground/70 text-sm">{testimonial.role}</p>
-                    <p className="text-primary text-sm">{testimonial.location}</p>
-                  </div>
+                <div>
+                  <h4 className="font-bold text-foreground">{testimonial.name}</h4>
+                  <p className="text-foreground/60 text-sm">{testimonial.role}</p>
                 </div>
               </CardContent>
             </Card>

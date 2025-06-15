@@ -1,14 +1,18 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { MessageSquare, Phone, MapPin, Clock } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from "@/hooks/use-toast";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    email: '',
+    service: '',
     message: ''
   });
   const { toast } = useToast();
@@ -17,29 +21,30 @@ const ContactForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.phone || !formData.message) {
-      toast({
-        title: "خطأ",
-        description: "يرجى ملء جميع الحقول",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const whatsappMessage = `مرحباً، اسمي ${formData.name}، رقم هاتفي ${formData.phone}. ${formData.message}`;
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+    const whatsappMessage = `مرحباً، اسمي ${formData.name}
+الهاتف: ${formData.phone}
+البريد: ${formData.email}
+الخدمة المطلوبة: ${formData.service}
+الرسالة: ${formData.message}`;
     
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(whatsappUrl, '_blank');
     
     toast({
       title: "تم إرسال الرسالة",
-      description: "سيتم توجيهك لواتساب لإكمال المحادثة"
+      description: "سيتم توجيهك إلى واتساب لإكمال المحادثة",
     });
     
-    setFormData({ name: '', phone: '', message: '' });
+    setFormData({
+      name: '',
+      phone: '',
+      email: '',
+      service: '',
+      message: ''
+    });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -58,57 +63,78 @@ const ContactForm = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle className="text-2xl text-foreground">أرسل لنا رسالة</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-bold text-foreground mb-6">أرسل لنا رسالة</h3>
+              
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-foreground font-medium mb-2">
-                    الاسم الكامل
-                  </label>
-                  <input
+                  <Input
                     type="text"
-                    id="name"
                     name="name"
+                    placeholder="الاسم الكامل"
                     value={formData.name}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="اكتب اسمك هنا"
+                    onChange={handleChange}
+                    required
+                    className="bg-background border-border"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="phone" className="block text-foreground font-medium mb-2">
-                    رقم الهاتف
-                  </label>
-                  <input
+                  <Input
                     type="tel"
-                    id="phone"
                     name="phone"
+                    placeholder="رقم الهاتف"
                     value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="رقم هاتفك"
+                    onChange={handleChange}
+                    required
+                    className="bg-background border-border"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="message" className="block text-foreground font-medium mb-2">
-                    الرسالة
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                    placeholder="اكتب رسالتك أو وصف مشروعك هنا"
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="البريد الإلكتروني"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="bg-background border-border"
                   />
                 </div>
                 
-                <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3">
+                <div>
+                  <select
+                    name="service"
+                    value={formData.service}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-3 bg-background border border-border rounded-md text-foreground"
+                  >
+                    <option value="">اختر الخدمة المطلوبة</option>
+                    <option value="نقش بالليزر">نقش بالليزر</option>
+                    <option value="تقطيع بالليزر">تقطيع بالليزر</option>
+                    <option value="دروع وميداليات">دروع وميداليات</option>
+                    <option value="لوحات إعلانية">لوحات إعلانية</option>
+                    <option value="هدايا مخصصة">هدايا مخصصة</option>
+                    <option value="أخرى">أخرى</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <Textarea
+                    name="message"
+                    placeholder="تفاصيل المشروع أو الخدمة المطلوبة"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={4}
+                    className="bg-background border-border"
+                  />
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
                   <MessageSquare className="ml-2 h-5 w-5" />
                   إرسال عبر واتساب
                 </Button>
@@ -116,16 +142,48 @@ const ContactForm = () => {
             </CardContent>
           </Card>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             <Card className="bg-card border-border">
               <CardContent className="p-6">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                  <div className="bg-primary/20 p-3 rounded-full">
-                    <Phone className="h-6 w-6 text-primary" />
-                  </div>
+                <div className="flex items-center space-x-4 rtl:space-x-reverse mb-4">
+                  <MessageSquare className="h-8 w-8 text-primary" />
                   <div>
-                    <h3 className="font-bold text-foreground">اتصل بنا</h3>
-                    <p className="text-foreground/80">+20 102 191 1335</p>
+                    <h4 className="font-bold text-foreground">واتساب</h4>
+                    <p className="text-foreground/70">+20 102 191 1335</p>
+                  </div>
+                </div>
+                <Button asChild className="w-full bg-green-600 hover:bg-green-700 text-white">
+                  <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer">
+                    تواصل عبر واتساب
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4 rtl:space-x-reverse mb-4">
+                  <Phone className="h-8 w-8 text-primary" />
+                  <div>
+                    <h4 className="font-bold text-foreground">الهاتف</h4>
+                    <p className="text-foreground/70">+20 102 191 1335</p>
+                  </div>
+                </div>
+                <Button asChild variant="outline" className="w-full">
+                  <a href="tel:+201021911335">
+                    اتصل الآن
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4 rtl:space-x-reverse mb-4">
+                  <MapPin className="h-8 w-8 text-primary" />
+                  <div>
+                    <h4 className="font-bold text-foreground">الموقع</h4>
+                    <p className="text-foreground/70">أرمنت الوابورات، محافظة الأقصر</p>
                   </div>
                 </div>
               </CardContent>
@@ -133,42 +191,12 @@ const ContactForm = () => {
 
             <Card className="bg-card border-border">
               <CardContent className="p-6">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                  <div className="bg-primary/20 p-3 rounded-full">
-                    <MessageSquare className="h-6 w-6 text-primary" />
-                  </div>
+                <div className="flex items-center space-x-4 rtl:space-x-reverse mb-4">
+                  <Clock className="h-8 w-8 text-primary" />
                   <div>
-                    <h3 className="font-bold text-foreground">واتساب</h3>
-                    <p className="text-foreground/80">متاح 24/7</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                  <div className="bg-primary/20 p-3 rounded-full">
-                    <MapPin className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground">العنوان</h3>
-                    <p className="text-foreground/80">أرمنت الوابورات، محافظة الأقصر</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                  <div className="bg-primary/20 p-3 rounded-full">
-                    <Clock className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground">ساعات العمل</h3>
-                    <p className="text-foreground/80">السبت - الخميس: 9ص - 9م</p>
-                    <p className="text-foreground/80">الجمعة: 2م - 9م</p>
+                    <h4 className="font-bold text-foreground">ساعات العمل</h4>
+                    <p className="text-foreground/70">السبت - الخميس: 9ص - 9م</p>
+                    <p className="text-foreground/70">الجمعة: 2م - 9م</p>
                   </div>
                 </div>
               </CardContent>

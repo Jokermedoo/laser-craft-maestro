@@ -16,14 +16,13 @@ const BackToTop = () => {
     };
 
     window.addEventListener('scroll', toggleVisibility);
-
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   };
 
@@ -34,9 +33,8 @@ const BackToTop = () => {
   return (
     <Button
       onClick={scrollToTop}
+      className="fixed bottom-8 right-8 z-50 bg-primary hover:bg-primary/90 text-primary-foreground p-3 rounded-full shadow-lg"
       size="icon"
-      className="fixed bottom-8 left-8 z-50 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-all duration-300 transform hover:scale-110"
-      aria-label="العودة للأعلى"
     >
       <ArrowUp className="h-5 w-5" />
     </Button>
