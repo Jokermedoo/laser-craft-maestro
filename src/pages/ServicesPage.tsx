@@ -4,50 +4,53 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import SectionHeader from '@/components/shared/SectionHeader';
-import ServiceCard from '@/components/services/ServiceCard';
+import PromoBanner from '@/components/marketing/PromoBanner';
+import Stats from '@/components/marketing/Stats';
 import { CompanyProvider, useCompany } from '@/contexts/CompanyContext';
-import { Zap, Package, Trophy, Palette, Star, Clock, Shield, Truck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { MessageSquare, Zap, Package, Trophy, Palette, Star, CheckCircle } from 'lucide-react';
 
 const ServicesPageContent = () => {
   const { companyInfo } = useCompany();
 
-  const mainServices = [
+  const services = [
     {
       icon: Zap,
-      title: "النقش بالليزر",
-      description: "نقش دقيق على جميع أنواع الخامات بأعلى جودة وأدق التفاصيل مع إمكانية النقش على الخشب، الأكريليك، المعادن، والجلود",
+      title: "النقش بالليزر على المعادن",
+      description: "نقش دقيق ومتين على الذهب والفضة والنحاس والستانلس ستيل",
+      features: ["دقة عالية", "مقاوم للتآكل", "تفاصيل دقيقة", "ضمان الجودة"],
+      price: "ابتداءً من 50 جنيه",
       gradient: "from-yellow-400 to-orange-500",
-      details: ["نقش على الخشب الطبيعي", "نقش على الأكريليك والبلاستيك", "نقش على المعادن", "نقش الخط العربي", "نقش الصور والتصاميم"]
+      popular: true
     },
     {
       icon: Package,
-      title: "التقطيع بالليزر", 
-      description: "تقطيع الخامات بدقة متناهية وحواف نظيفة ومثالية مع ضمان الجودة والدقة في جميع الأشكال والتصاميم",
+      title: "التقطيع بالليزر للخامات",
+      description: "تقطيع دقيق للأكريليك والخشب والجلد والقماش بأشكال معقدة",
+      features: ["حواف نظيفة", "أشكال معقدة", "دقة متناهية", "سرعة عالية"],
+      price: "ابتداءً من 30 جنيه",
       gradient: "from-blue-400 to-purple-500",
-      details: ["تقطيع الأكريليك", "تقطيع الخشب", "تقطيع الورق والكرتون", "تقطيع القماش", "تقطيع أشكال معقدة"]
+      popular: false
     },
     {
       icon: Trophy,
-      title: "الدروع والميداليات",
-      description: "تصنيع دروع وميداليات تذكارية مخصصة للمناسبات والبطولات والتكريمات الخاصة",
+      title: "الدروع والميداليات التذكارية",
+      description: "تصنيع دروع وميداليات مخصصة للفرق والمؤسسات والمناسبات",
+      features: ["تصميم مخصص", "خامات فاخرة", "تشطيب مميز", "تسليم سريع"],
+      price: "ابتداءً من 100 جنيه",
       gradient: "from-green-400 to-emerald-500",
-      details: ["دروع التكريم", "ميداليات البطولات", "جوائز تذكارية", "دروع الشركات", "تصاميم مخصصة"]
+      popular: false
     },
     {
       icon: Palette,
-      title: "الرسم والحفر",
-      description: "رسم وحفر التصاميم المعقدة والفنية بأحدث تقنيات الليزر مع إمكانية تنفيذ أي تصميم مهما كان معقداً",
+      title: "الرسم والحفر الفني",
+      description: "رسم وحفر التصاميم الفنية والشعارات بأحدث تقنيات الليزر",
+      features: ["إبداع فني", "تصاميم مبتكرة", "جودة احترافية", "أسعار منافسة"],
+      price: "ابتداءً من 80 جنيه",
       gradient: "from-pink-400 to-red-500",
-      details: ["حفر التصاميم ثلاثية الأبعاد", "رسم الشعارات", "حفر النصوص", "تصاميم فنية معقدة", "حفر الزخارف"]
+      popular: false
     }
-  ];
-
-  const additionalServices = [
-    { title: "لوحات إعلانية", description: "تصميم وتنفيذ لوحات دعاية وإعلان احترافية" },
-    { title: "بطاقات عمل", description: "بطاقات عمل مميزة بالليزر" },
-    { title: "هدايا مخصصة", description: "هدايا شخصية منقوشة بالليزر" },
-    { title: "لوحات تذكارية", description: "لوحات تذكارية للمناسبات الخاصة" }
   ];
 
   return (
@@ -60,32 +63,57 @@ const ServicesPageContent = () => {
         <div className="container mx-auto px-6">
           <SectionHeader 
             subtitle="خدماتنا المتميزة"
-            title="مجموعة شاملة من خدمات الليزر"
-            description="نقدم أفضل خدمات الليزر في صعيد مصر بأعلى معايير الجودة والدقة"
+            title="أفضل خدمات الليزر في صعيد مصر"
+            description="نقدم خدمات ليزر متخصصة بأحدث التقنيات وأعلى معايير الجودة"
           />
         </div>
       </section>
 
-      {/* Main Services */}
+      {/* Promo Banner */}
+      <PromoBanner whatsappNumber={companyInfo.whatsapp} />
+
+      {/* Services Grid */}
       <section className="relative py-20 z-10">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {mainServices.map((service, index) => (
-              <Card key={index} className="bg-slate-800/50 backdrop-blur-sm border border-gray-700 hover:border-yellow-400/50 transition-all duration-500 hover:scale-105">
-                <CardContent className="p-8">
-                  <div className={`bg-gradient-to-r ${service.gradient} w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
-                    <service.icon className="h-10 w-10 text-white" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {services.map((service, index) => (
+              <Card key={index} className={`relative bg-gradient-to-br from-slate-800/50 to-purple-800/20 backdrop-blur-sm border ${service.popular ? 'border-yellow-400/70 shadow-yellow-400/20 shadow-2xl' : 'border-purple-500/30'} hover:border-yellow-400/50 transition-all duration-300 group hover:scale-105`}>
+                {service.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-2 rounded-full font-bold text-sm">
+                    الأكثر طلباً ⭐
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">{service.title}</h3>
-                  <p className="text-gray-400 mb-6 leading-relaxed">{service.description}</p>
-                  <div className="space-y-2">
-                    {service.details.map((detail, detailIndex) => (
-                      <div key={detailIndex} className="flex items-center space-x-2 rtl:space-x-reverse">
-                        <Star className="h-4 w-4 text-yellow-400" />
-                        <span className="text-gray-300">{detail}</span>
+                )}
+                <CardContent className="p-8">
+                  <div className="flex items-center space-x-4 rtl:space-x-reverse mb-6">
+                    <div className={`bg-gradient-to-r ${service.gradient} p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <service.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-white mb-2">{service.title}</h3>
+                      <p className="text-yellow-400 font-bold text-lg">{service.price}</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-300 mb-6 leading-relaxed">{service.description}</p>
+                  
+                  <div className="space-y-3 mb-8">
+                    {service.features.map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-center space-x-2 rtl:space-x-reverse">
+                        <CheckCircle className="h-5 w-5 text-green-400" />
+                        <span className="text-gray-300">{feature}</span>
                       </div>
                     ))}
                   </div>
+                  
+                  <Button 
+                    asChild
+                    className={`w-full bg-gradient-to-r ${service.gradient} hover:opacity-90 text-white font-bold py-3 transform hover:scale-105 transition-all duration-300`}
+                  >
+                    <a href={`https://wa.me/${companyInfo.whatsapp}?text=مرحباً، أريد الاستفسار عن خدمة ${service.title}`} target="_blank">
+                      <MessageSquare className="ml-2 h-5 w-5" />
+                      اطلب الخدمة الآن
+                    </a>
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -93,47 +121,42 @@ const ServicesPageContent = () => {
         </div>
       </section>
 
-      {/* Additional Services */}
-      <section className="relative py-20 z-10">
-        <div className="container mx-auto px-6">
-          <h3 className="text-3xl font-bold text-center text-white mb-12">خدمات إضافية</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {additionalServices.map((service, index) => (
-              <Card key={index} className="bg-slate-800/30 backdrop-blur-sm border border-gray-700 hover:border-yellow-400/50 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <h4 className="font-bold text-white mb-3">{service.title}</h4>
-                  <p className="text-gray-400 text-sm">{service.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Stats Section */}
+      <Stats />
 
-      {/* Process Section */}
+      {/* Why Choose Us */}
       <section className="relative py-20 z-10">
         <div className="container mx-auto px-6">
-          <SectionHeader 
-            subtitle="كيف نعمل"
-            title="خطوات تنفيذ مشروعك"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              { step: "1", title: "التواصل", desc: "تواصل معنا عبر واتساب أو الهاتف" },
-              { step: "2", title: "التصميم", desc: "نناقش التصميم ونقدم اقتراحات" },
-              { step: "3", title: "التنفيذ", desc: "نبدأ العمل بأحدث تقنيات الليزر" },
-              { step: "4", title: "التسليم", desc: "نسلم العمل في الموعد المحدد" }
-            ].map((process, index) => (
-              <Card key={index} className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm border border-purple-500/30 text-center">
-                <CardContent className="p-8">
-                  <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-bold text-black">{process.step}</span>
-                  </div>
-                  <h4 className="text-xl font-bold text-white mb-3">{process.title}</h4>
-                  <p className="text-gray-400">{process.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
+              لماذا تختار <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">ورشة المعز؟</span>
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="bg-gradient-to-br from-green-600/20 to-emerald-600/20 backdrop-blur-sm border border-green-500/30 hover:border-yellow-400/50 transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <Star className="h-12 w-12 text-yellow-400 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h4 className="text-xl font-bold text-white mb-4">جودة مضمونة</h4>
+                <p className="text-gray-300">ضمان على جميع الأعمال لمدة سنة كاملة</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 hover:border-yellow-400/50 transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <Zap className="h-12 w-12 text-yellow-400 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h4 className="text-xl font-bold text-white mb-4">تقنية متطورة</h4>
+                <p className="text-gray-300">أحدث ماكينات الليزر في الشرق الأوسط</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm border border-purple-500/30 hover:border-yellow-400/50 transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <Trophy className="h-12 w-12 text-yellow-400 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h4 className="text-xl font-bold text-white mb-4">خبرة عالية</h4>
+                <p className="text-gray-300">فريق محترف بخبرة أكثر من 5 سنوات</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

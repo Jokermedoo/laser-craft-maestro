@@ -10,6 +10,9 @@ import Contact from '@/components/Contact';
 import CTA from '@/components/CTA';
 import Footer from '@/components/Footer';
 import AnimatedBackground from '@/components/AnimatedBackground';
+import PromoBanner from '@/components/marketing/PromoBanner';
+import Testimonials from '@/components/marketing/Testimonials';
+import Stats from '@/components/marketing/Stats';
 import { CompanyProvider, useCompany } from '@/contexts/CompanyContext';
 
 const IndexContent = () => {
@@ -20,10 +23,13 @@ const IndexContent = () => {
       <AnimatedBackground />
       <Navbar whatsappNumber={companyInfo.whatsapp} />
       <Hero whatsappNumber={companyInfo.whatsapp} />
+      <PromoBanner whatsappNumber={companyInfo.whatsapp} />
       <About />
+      <Stats />
       <Services />
       <Gallery />
       <Features />
+      <Testimonials />
       <Contact whatsappNumber={companyInfo.whatsapp} />
       <CTA whatsappNumber={companyInfo.whatsapp} />
       <Footer whatsappNumber={companyInfo.whatsapp} />

@@ -18,7 +18,7 @@ const companyInfo: CompanyInfo = {
   name: "ورشة المعز لخدمات الليزر",
   phone: "+20 102 191 1335",
   secondaryPhone: "+20 114 199 0282",
-  whatsapp: "201021911335",
+  whatsapp: "201141990282",
   address: "أرمنت الوابورات، الأقصر",
   email: "info@almaez-laser.com"
 };
