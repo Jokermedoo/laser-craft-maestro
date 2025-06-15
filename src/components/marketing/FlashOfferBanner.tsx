@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Timer, Zap, Gift, Star, MessageSquare, Crown, Sparkles } from 'lucide-react';
+import { Timer, Zap, Gift, Star, MessageSquare, Crown, Sparkles, TrendingUp, Award } from 'lucide-react';
 
 interface FlashOfferBannerProps {
   whatsappNumber: string;
@@ -65,16 +65,16 @@ const FlashOfferBanner = ({ whatsappNumber }: FlashOfferBannerProps) => {
             {/* Flash offer header */}
             <div className="text-center mb-3">
               <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse mb-2">
-                <Zap className="h-5 w-5 text-white animate-bounce" />
-                <h3 className="text-lg font-bold text-white">⚡ عرض البرق ⚡</h3>
-                <Zap className="h-5 w-5 text-white animate-bounce" />
+                <TrendingUp className="h-5 w-5 text-white animate-bounce" />
+                <h3 className="text-lg font-bold text-white">🔥 عرض استثنائي محدود 🔥</h3>
+                <Award className="h-5 w-5 text-white animate-bounce" />
               </div>
               
               <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2 mb-2">
                 <p className="text-2xl font-bold text-white">
-                  خصم <span className="text-yellow-200 text-3xl">40%</span>
+                  وفر <span className="text-yellow-200 text-3xl">40%</span>
                 </p>
-                <p className="text-sm text-white">على جميع خدمات النقش بالليزر</p>
+                <p className="text-sm text-white">على أفضل خدمات النقش والليزر في الصعيد</p>
               </div>
             </div>
 
@@ -82,7 +82,7 @@ const FlashOfferBanner = ({ whatsappNumber }: FlashOfferBannerProps) => {
             <div className="bg-black/30 backdrop-blur-sm rounded-lg p-3 mb-3">
               <div className="flex items-center justify-center space-x-2 rtl:space-x-reverse mb-2">
                 <Timer className="h-4 w-4 text-red-300 animate-pulse" />
-                <span className="text-white text-sm font-bold">ينتهي العرض خلال:</span>
+                <span className="text-white text-sm font-bold">العرض ينتهي خلال:</span>
               </div>
               
               <div className="text-center">
@@ -97,11 +97,11 @@ const FlashOfferBanner = ({ whatsappNumber }: FlashOfferBannerProps) => {
             <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
               <div className="bg-white/15 rounded p-2 text-center">
                 <Gift className="h-3 w-3 text-white mx-auto mb-1" />
-                <span className="text-white font-bold">هدية مجانية</span>
+                <span className="text-white font-bold">شحن مجاني</span>
               </div>
               <div className="bg-white/15 rounded p-2 text-center">
                 <Star className="h-3 w-3 text-white mx-auto mb-1" />
-                <span className="text-white font-bold">ضمان سنة</span>
+                <span className="text-white font-bold">ضمان 100%</span>
               </div>
             </div>
 
@@ -110,15 +110,15 @@ const FlashOfferBanner = ({ whatsappNumber }: FlashOfferBannerProps) => {
               asChild
               className="w-full bg-white text-red-600 hover:bg-gray-100 font-bold text-sm py-2 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200"
             >
-              <a href={`https://wa.me/${whatsappNumber}?text=🔥 مرحباً، أريد الاستفادة من عرض البرق خصم 40% المحدود لـ30 دقيقة فقط!`} target="_blank">
+              <a href={`https://wa.me/${whatsappNumber}?text=🔥 السلام عليكم، أريد الاستفادة من العرض الاستثنائي المحدود - خصم 40% لمدة نصف ساعة فقط!`} target="_blank">
                 <MessageSquare className="h-4 w-4 ml-2" />
-                احجز العرض الآن!
+                احجز فوراً واوفر 40%!
                 <Zap className="h-4 w-4 mr-2" />
               </a>
             </Button>
 
             <p className="text-center text-xs text-white mt-2 opacity-80">
-              * العرض ساري لأول 20 عميل فقط
+              🎯 العرض حصري لأول 15 عميل فقط - لا تفوت الفرصة!
             </p>
           </div>
         </CardContent>
