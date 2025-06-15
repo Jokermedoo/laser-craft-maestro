@@ -11,7 +11,7 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="features" className="py-16 bg-black/5">
+    <section id="features" className="py-20 bg-card">
       <div className="container mx-auto px-4">
         <h2 className="text-4xl font-bold text-center text-foreground mb-12">لماذا تختارنا؟</h2>
         <div className="max-w-2xl mx-auto">

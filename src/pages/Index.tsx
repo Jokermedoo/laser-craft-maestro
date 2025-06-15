@@ -5,6 +5,7 @@ import Gallery from '@/components/landing/Gallery';
 import Features from '@/components/landing/Features';
 import CTA from '@/components/landing/CTA';
 import Footer from '@/components/landing/Footer';
+import Services from '@/components/landing/Services';
 
 const Index = () => {
   return (
@@ -12,6 +13,7 @@ const Index = () => {
       <Header />
       <main>
         <About />
+        <Services />
         <Gallery />
         <Features />
         <CTA />
