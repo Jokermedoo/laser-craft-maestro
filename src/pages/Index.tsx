@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -15,6 +14,7 @@ import Testimonials from '@/components/marketing/Testimonials';
 import Stats from '@/components/marketing/Stats';
 import PriceCalculator from '@/components/calculator/PriceCalculator';
 import DailyOffers from '@/components/offers/DailyOffers';
+import FlashOfferBanner from '@/components/marketing/FlashOfferBanner';
 import { CompanyProvider, useCompany } from '@/contexts/CompanyContext';
 
 const IndexContent = () => {
@@ -23,6 +23,7 @@ const IndexContent = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
       <AnimatedBackground />
+      <FlashOfferBanner whatsappNumber={companyInfo.whatsapp} />
       <Navbar whatsappNumber={companyInfo.whatsapp} />
       <Hero whatsappNumber={companyInfo.whatsapp} />
       <PromoBanner whatsappNumber={companyInfo.whatsapp} />
