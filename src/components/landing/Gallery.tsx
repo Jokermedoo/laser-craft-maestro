@@ -1,13 +1,6 @@
 
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 const images = [
   { src: "/lovable-uploads/271295b7-7e99-47e1-b4c6-b33a750033ad.png", alt: "عمل ليزر 1" },
@@ -22,27 +15,22 @@ const Gallery = () => {
     <section id="gallery" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <h2 className="text-4xl font-bold text-center text-foreground mb-12">بعض أعمالنا</h2>
-        <Carousel className="w-full max-w-4xl mx-auto" opts={{ loop: true }}>
-          <CarouselContent>
-            {images.map((image, index) => (
-              <CarouselItem key={index}>
-                <div className="p-1">
-                  <Card className="overflow-hidden border-2 border-border rounded-xl aspect-square">
-                    <CardContent className="flex items-center justify-center p-0 h-full">
-                      <img 
-                        src={image.src} 
-                        alt={image.alt} 
-                        className="w-full h-full object-contain"
-                      />
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="text-primary-foreground bg-primary/80 hover:bg-primary" />
-          <CarouselNext className="text-primary-foreground bg-primary/80 hover:bg-primary" />
-        </Carousel>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {images.map((image, index) => (
+            <Card key={index} className="overflow-hidden border-2 border-border rounded-xl group relative aspect-square">
+              <CardContent className="p-0 h-full">
+                <img 
+                  src={image.src} 
+                  alt={image.alt} 
+                  className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                />
+              </CardContent>
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
+                  <p className="text-white text-lg font-semibold text-center">{image.alt}</p>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </section>
   );

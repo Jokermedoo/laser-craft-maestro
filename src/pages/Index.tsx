@@ -6,10 +6,12 @@ import Features from '@/components/landing/Features';
 import CTA from '@/components/landing/CTA';
 import Footer from '@/components/landing/Footer';
 import Services from '@/components/landing/Services';
+import Navbar from '@/components/landing/Navbar';
 
 const Index = () => {
   return (
-    <div className="bg-background">
+    <div id="top" className="bg-background">
+      <Navbar />
       <Header />
       <main>
         <About />
