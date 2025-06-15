@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -15,6 +16,9 @@ import Stats from '@/components/marketing/Stats';
 import PriceCalculator from '@/components/calculator/PriceCalculator';
 import DailyOffers from '@/components/offers/DailyOffers';
 import FlashOfferBanner from '@/components/marketing/FlashOfferBanner';
+import InteractiveFAQ from '@/components/enhanced/InteractiveFAQ';
+import ProductShowcase from '@/components/enhanced/ProductShowcase';
+import SpecialOffers from '@/components/enhanced/SpecialOffers';
 import { CompanyProvider, useCompany } from '@/contexts/CompanyContext';
 
 const IndexContent = () => {
@@ -27,14 +31,17 @@ const IndexContent = () => {
       <Navbar whatsappNumber={companyInfo.whatsapp} />
       <Hero whatsappNumber={companyInfo.whatsapp} />
       <PromoBanner whatsappNumber={companyInfo.whatsapp} />
+      <SpecialOffers whatsappNumber={companyInfo.whatsapp} />
       <DailyOffers whatsappNumber={companyInfo.whatsapp} />
       <About />
       <Stats />
       <Services />
+      <ProductShowcase whatsappNumber={companyInfo.whatsapp} />
       <PriceCalculator whatsappNumber={companyInfo.whatsapp} />
       <Gallery />
       <Features />
       <Testimonials />
+      <InteractiveFAQ whatsappNumber={companyInfo.whatsapp} />
       <Contact whatsappNumber={companyInfo.whatsapp} />
       <CTA whatsappNumber={companyInfo.whatsapp} />
       <Footer whatsappNumber={companyInfo.whatsapp} />

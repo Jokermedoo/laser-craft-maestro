@@ -11,6 +11,7 @@ import AdminPage from "./pages/AdminPage";
 import WorkStepsPage from "./pages/WorkStepsPage";
 import FAQPage from "./pages/FAQPage";
 import NotFound from "./pages/NotFound";
+import PerformanceOptimizer from "./components/enhanced/PerformanceOptimizer";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <PerformanceOptimizer />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
