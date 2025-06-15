@@ -10,7 +10,7 @@ import { GripVertical, Type, Copy } from 'lucide-react';
 
 interface DraggableItem {
   id: string;
-  type: 'color' | 'font' | 'layout' | 'component';
+  type: 'color' | 'font' | 'layout' | 'component' | 'icon' | 'animation';
   name: string;
   value: any;
   category?: string;

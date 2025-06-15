@@ -86,7 +86,6 @@ const DraggableAnimationItem = ({ item, onUpdate }: DraggableAnimationItemProps)
             <Switch
               checked={isEnabled}
               onCheckedChange={setIsEnabled}
-              size="sm"
             />
             <Button
               onClick={previewAnimation}
