@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, Smartphone, Tablet, Monitor, Refresh } from 'lucide-react';
+import { Eye, EyeOff, Smartphone, Tablet, Monitor, RefreshCw } from 'lucide-react';
 import { useAdmin } from '@/contexts/AdminContext';
 
 type DeviceType = 'mobile' | 'tablet' | 'desktop';
@@ -85,7 +85,7 @@ const LivePreviewPanel = () => {
             onClick={refreshPreview}
             className="border-gray-600"
           >
-            <Refresh className="h-4 w-4" />
+            <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
 
