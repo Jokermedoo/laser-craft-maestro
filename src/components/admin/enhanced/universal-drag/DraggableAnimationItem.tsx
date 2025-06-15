@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -9,14 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { GripVertical, Zap, Play, Pause } from 'lucide-react';
-
-interface DraggableItem {
-  id: string;
-  type: 'color' | 'font' | 'layout' | 'component' | 'icon' | 'animation';
-  name: string;
-  value: any;
-  category?: string;
-}
+import { DraggableItem } from './types';
 
 interface DraggableAnimationItemProps {
   item: DraggableItem;

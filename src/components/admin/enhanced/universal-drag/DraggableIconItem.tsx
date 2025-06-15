@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -26,14 +25,7 @@ import {
   Download,
   Upload
 } from 'lucide-react';
-
-interface DraggableItem {
-  id: string;
-  type: 'color' | 'font' | 'layout' | 'component' | 'icon' | 'animation';
-  name: string;
-  value: any;
-  category?: string;
-}
+import { DraggableItem } from './types';
 
 interface DraggableIconItemProps {
   item: DraggableItem;

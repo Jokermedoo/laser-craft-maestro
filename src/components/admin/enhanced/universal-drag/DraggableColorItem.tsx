@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -6,14 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { GripVertical, Palette, Copy } from 'lucide-react';
-
-interface DraggableItem {
-  id: string;
-  type: 'color' | 'font' | 'layout' | 'component' | 'icon' | 'animation';
-  name: string;
-  value: any;
-  category?: string;
-}
+import { DraggableItem } from './types';
 
 interface DraggableColorItemProps {
   item: DraggableItem;
