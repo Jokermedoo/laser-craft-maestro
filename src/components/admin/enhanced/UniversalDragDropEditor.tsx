@@ -13,14 +13,20 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Move, Palette, Type, Layout, Grid, Star, Zap } from 'lucide-react';
+import { Move, Palette, Type, Layout, Grid, Star, Zap, Eye, Settings } from 'lucide-react';
 import { useDragDropLogic } from './universal-drag/useDragDropLogic';
 import DraggableItemRenderer from './universal-drag/DraggableItemRenderer';
 import TabContent from './universal-drag/TabContent';
 import ElementPreview from './universal-drag/ElementPreview';
+import LivePreviewPanel from './LivePreviewPanel';
+import ConfigManager from './ConfigManager';
+import { usePerformance } from '@/hooks/usePerformance';
+import { useAutoTheme } from '@/hooks/useAutoTheme';
 
 const UniversalDragDropEditor = () => {
   const [activeTab, setActiveTab] = useState('colors');
+  const { measureRenderTime, optimizePerformance } = usePerformance();
+  const { currentTheme, toggleTheme } = useAutoTheme();
   
   const {
     activeId,
@@ -51,6 +57,12 @@ const UniversalDragDropEditor = () => {
     })
   );
 
+  React.useEffect(() => {
+    const endMeasure = measureRenderTime('UniversalDragDropEditor');
+    optimizePerformance();
+    return endMeasure;
+  }, [measureRenderTime, optimizePerformance]);
+
   const renderDraggableItem = (item: any) => (
     <DraggableItemRenderer item={item} onUpdate={updateItem} />
   );
@@ -63,6 +75,7 @@ const UniversalDragDropEditor = () => {
       components: componentItems,
       icons: iconItems,
       animations: animationItems,
+      theme: currentTheme,
       timestamp: new Date().toISOString()
     };
     
@@ -96,7 +109,7 @@ const UniversalDragDropEditor = () => {
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
           <div className="xl:col-span-3">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-6 bg-slate-800/50">
+              <TabsList className="grid w-full grid-cols-8 bg-slate-800/50">
                 <TabsTrigger value="colors" className="data-[state=active]:bg-purple-600">
                   <Palette className="h-4 w-4 ml-2" />
                   الألوان
@@ -120,6 +133,14 @@ const UniversalDragDropEditor = () => {
                 <TabsTrigger value="animations" className="data-[state=active]:bg-purple-600">
                   <Zap className="h-4 w-4 ml-2" />
                   الحركات
+                </TabsTrigger>
+                <TabsTrigger value="preview" className="data-[state=active]:bg-purple-600">
+                  <Eye className="h-4 w-4 ml-2" />
+                  المعاينة
+                </TabsTrigger>
+                <TabsTrigger value="configs" className="data-[state=active]:bg-purple-600">
+                  <Settings className="h-4 w-4 ml-2" />
+                  التكوينات
                 </TabsTrigger>
               </TabsList>
 
@@ -171,6 +192,14 @@ const UniversalDragDropEditor = () => {
                   onAddItem={() => addNewItem('animation')}
                   renderDraggableItem={renderDraggableItem}
                 />
+              </TabsContent>
+
+              <TabsContent value="preview" className="mt-6">
+                <LivePreviewPanel />
+              </TabsContent>
+
+              <TabsContent value="configs" className="mt-6">
+                <ConfigManager />
               </TabsContent>
             </Tabs>
           </div>
