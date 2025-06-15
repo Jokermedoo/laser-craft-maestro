@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Play } from 'lucide-react';
+import GalleryCard from './gallery/GalleryCard';
 
 const Gallery = () => {
   const galleryItems = [
@@ -50,29 +49,13 @@ const Gallery = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {galleryItems.map((item, index) => (
-            <Card key={index} className="group bg-slate-800/50 backdrop-blur-sm border border-gray-700 overflow-hidden hover:border-yellow-400/50 transition-all duration-300 hover:scale-105">
-              <div className="relative aspect-square overflow-hidden">
-                <img 
-                  src={item.image} 
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute top-4 left-4">
-                  <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                    {item.category}
-                  </span>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Play className="h-12 w-12 text-white bg-yellow-400/20 rounded-full p-3 backdrop-blur-sm" />
-                </div>
-              </div>
-              <CardContent className="p-4 sm:p-6">
-                <h3 className="font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors duration-300 text-base sm:text-lg">{item.title}</h3>
-                <p className="text-gray-400 text-sm group-hover:text-gray-300 transition-colors duration-300">{item.description}</p>
-              </CardContent>
-            </Card>
+            <GalleryCard 
+              key={index}
+              image={item.image}
+              title={item.title}
+              description={item.description}
+              category={item.category}
+            />
           ))}
         </div>
       </div>
