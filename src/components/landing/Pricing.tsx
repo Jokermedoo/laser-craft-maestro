@@ -1,52 +1,50 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, MessageSquare } from 'lucide-react';
 
-const pricingPlans = [
+const pricingTiers = [
   {
     name: "الباقة الأساسية",
     description: "مثالية للأفراد والمشاريع الصغيرة",
     features: [
-      "نقش على قطعة واحدة",
-      "تصميم بسيط مجاني",
-      "خامة واحدة (خشب أو أكريليك)",
-      "مقاس حتى 20×20 سم",
-      "تسليم خلال 3 أيام"
+      "نقش بسيط على الخشب أو الأكريليك",
+      "حجم حتى 20×20 سم",
+      "تصميم بسيط",
+      "تسليم خلال 3 أيام",
+      "ضمان الجودة"
     ],
-    popular: false,
-    cta: "ابدأ الآن"
+    priceRange: "50 - 150 جنيه",
+    popular: false
   },
   {
     name: "الباقة المتوسطة",
-    description: "الأنسب للشركات الناشئة والمحلات",
+    description: "الأنسب للهدايا والمشاريع المتوسطة",
     features: [
-      "نقش على 5 قطع",
-      "تصميم متقدم مجاني",
-      "خامتين مختلفتين",
-      "مقاس حتى 40×40 سم",
-      "تسليم خلال يومين",
-      "خدمة عملاء مميزة"
+      "نقش وحفر متقدم",
+      "حجم حتى 40×40 سم",
+      "تصميم مخصص",
+      "ألوان متعددة",
+      "تسليم خلال 5 أيام",
+      "تغليف هدايا مجاني"
     ],
-    popular: true,
-    cta: "الأكثر طلباً"
+    priceRange: "150 - 400 جنيه",
+    popular: true
   },
   {
     name: "الباقة المتقدمة",
-    description: "للشركات الكبيرة والمشاريع الضخمة",
+    description: "للشركات والمشاريع الكبيرة",
     features: [
-      "نقش غير محدود",
-      "تصاميم حصرية متعددة",
-      "جميع الخامات المتاحة",
-      "أي مقاس مطلوب",
-      "تسليم خلال 24 ساعة",
-      "مدير حساب مخصص",
-      "ضمان ممتد",
-      "خصومات على الطلبات المستقبلية"
+      "جميع أنواع الليزر",
+      "أحجام كبيرة",
+      "تصميم احترافي",
+      "كميات كبيرة",
+      "أولوية في التنفيذ",
+      "خدمة ما بعد البيع"
     ],
-    popular: false,
-    cta: "تواصل معنا"
+    priceRange: "400+ جنيه",
+    popular: false
   }
 ];
 
@@ -54,44 +52,45 @@ const Pricing = () => {
   const whatsappNumber = "201021911335";
 
   return (
-    <section id="pricing" className="py-20 bg-card">
+    <section id="pricing" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-foreground mb-4">باقات أسعارنا</h2>
+          <h2 className="text-4xl font-bold text-foreground mb-4">باقات الأسعار</h2>
           <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
-            اختر الباقة التي تناسب احتياجاتك وميزانيتك - جميع الأسعار قابلة للتفاوض
+            اختر الباقة المناسبة لمشروعك. جميع الأسعار تشمل التصميم والتنفيذ
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {pricingPlans.map((plan, index) => (
+          {pricingTiers.map((tier, index) => (
             <Card 
               key={index} 
-              className={`relative bg-background border-2 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/10 ${
-                plan.popular 
-                  ? 'border-primary shadow-lg scale-105' 
-                  : 'border-border hover:border-primary'
+              className={`relative bg-card border-2 transition-all duration-300 hover:shadow-lg ${
+                tier.popular 
+                  ? 'border-primary shadow-primary/10 transform scale-105' 
+                  : 'border-border hover:border-primary/50'
               }`}
             >
-              {plan.popular && (
+              {tier.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-semibold">
-                    الأكثر شيوعاً
+                  <span className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-bold">
+                    الأكثر طلباً
                   </span>
                 </div>
               )}
               
-              <CardHeader className="text-center p-8">
-                <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
-                <p className="text-foreground/70">{plan.description}</p>
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-2xl text-foreground mb-2">{tier.name}</CardTitle>
+                <p className="text-foreground/70 text-sm mb-4">{tier.description}</p>
+                <div className="text-3xl font-bold text-primary">{tier.priceRange}</div>
               </CardHeader>
               
-              <CardContent className="p-8 pt-0">
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start space-x-3 rtl:space-x-reverse">
-                      <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-foreground/80">{feature}</span>
+              <CardContent className="pt-0">
+                <ul className="space-y-3 mb-8">
+                  {tier.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center text-foreground/80">
+                      <CheckCircle className="h-5 w-5 text-primary ml-3 flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -99,18 +98,19 @@ const Pricing = () => {
                 <Button 
                   asChild
                   className={`w-full ${
-                    plan.popular 
+                    tier.popular 
                       ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
                       : 'bg-background border border-primary text-primary hover:bg-primary hover:text-primary-foreground'
                   }`}
+                  variant={tier.popular ? 'default' : 'outline'}
                 >
                   <a 
-                    href={`https://wa.me/${whatsappNumber}?text=أريد الاستفسار عن ${plan.name}`}
+                    href={`https://wa.me/${whatsappNumber}?text=أريد الاستفسار عن ${tier.name}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <MessageSquare className="ml-2 h-4 w-4" />
-                    {plan.cta}
+                    اطلب الآن
                   </a>
                 </Button>
               </CardContent>
@@ -119,40 +119,27 @@ const Pricing = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="bg-background border border-border rounded-lg p-8 max-w-4xl mx-auto">
+          <div className="bg-card border border-border rounded-lg p-8 max-w-3xl mx-auto">
             <h3 className="text-2xl font-bold text-foreground mb-4">
-              أسعار خاصة ومرونة في التعامل
+              تحتاج عرض سعر مخصص؟
             </h3>
-            <p className="text-foreground/80 mb-6 leading-relaxed">
-              نحن نتفهم أن كل مشروع له ظروفه الخاصة، لذلك نقدم أسعاراً مرنة ومخصصة 
-              تناسب ميزانيتكم. تواصلوا معنا للحصول على عرض سعر مفصل ومخصص لمشروعكم.
+            <p className="text-foreground/80 mb-6">
+              للمشاريع الخاصة أو الكميات الكبيرة، تواصل معنا للحصول على عرض سعر مفصل ومخصص لاحتياجاتك
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                asChild
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            <Button 
+              asChild
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              <a 
+                href={`https://wa.me/${whatsappNumber}?text=أريد عرض سعر مخصص لمشروعي`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <a 
-                  href={`https://wa.me/${whatsappNumber}?text=أريد عرض سعر مخصص لمشروعي`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <MessageSquare className="ml-2 h-5 w-5" />
-                  احصل على عرض سعر مجاني
-                </a>
-              </Button>
-              <Button 
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-              >
-                <a href="tel:+201021911335">
-                  اتصل للاستفسار
-                </a>
-              </Button>
-            </div>
+                <MessageSquare className="ml-2 h-5 w-5" />
+                احصل على عرض مخصص
+              </a>
+            </Button>
           </div>
         </div>
       </div>

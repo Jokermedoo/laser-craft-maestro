@@ -1,82 +1,61 @@
 
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Target, Award, Clock } from 'lucide-react';
+import { Users, Target, Award, MapPin } from 'lucide-react';
 
 const About = () => {
   return (
-    <section id="about" className="py-20 bg-background">
+    <section id="about" className="py-20 bg-card">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-foreground mb-4">عن ورشة المعز</h2>
-          <p className="text-lg text-foreground/80 max-w-3xl mx-auto leading-relaxed">
-            ورشة المعز لخدمات الليزر هي مؤسسة رائدة في مجال النقش والحفر والتقطيع بالليزر. 
-            نقدم خدمات متميزة ومبتكرة للأفراد والشركات بأحدث التقنيات وأعلى معايير الجودة.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          <Card className="bg-card border-border text-center hover:border-primary transition-colors">
-            <CardContent className="p-6">
-              <Users className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-foreground mb-2">1000+</h3>
-              <p className="text-foreground/80">عميل راضٍ</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border text-center hover:border-primary transition-colors">
-            <CardContent className="p-6">
-              <Target className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-foreground mb-2">5000+</h3>
-              <p className="text-foreground/80">مشروع منجز</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border text-center hover:border-primary transition-colors">
-            <CardContent className="p-6">
-              <Award className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-foreground mb-2">99%</h3>
-              <p className="text-foreground/80">معدل الرضا</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border text-center hover:border-primary transition-colors">
-            <CardContent className="p-6">
-              <Clock className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-foreground mb-2">5+</h3>
-              <p className="text-foreground/80">سنوات خبرة</p>
-            </CardContent>
-          </Card>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h3 className="text-3xl font-bold text-foreground mb-6">رؤيتنا ورسالتنا</h3>
-            <div className="space-y-6">
-              <div>
-                <h4 className="text-xl font-semibold text-primary mb-2">رؤيتنا</h4>
-                <p className="text-foreground/80 leading-relaxed">
-                  أن نكون الرواد في مجال خدمات الليزر في مصر والشرق الأوسط، 
-                  ونساهم في تطوير الصناعات الإبداعية من خلال تقديم حلول مبتكرة وعالية الجودة.
-                </p>
-              </div>
-              <div>
-                <h4 className="text-xl font-semibold text-primary mb-2">رسالتنا</h4>
-                <p className="text-foreground/80 leading-relaxed">
-                  نلتزم بتقديم خدمات ليزر متميزة تلبي احتياجات عملائنا وتفوق توقعاتهم، 
-                  من خلال فريق مهني مدرب وتقنيات حديثة تضمن الدقة والجودة في كل مشروع.
-                </p>
-              </div>
+            <h2 className="text-4xl font-bold text-foreground mb-6">من نحن؟</h2>
+            <p className="text-lg text-foreground/80 leading-relaxed mb-8">
+              ورشة المعز لخدمات الليزر هي الرائدة في مجال النقش والحفر والتقطيع بالليزر في صعيد مصر. 
+              نتخصص في تقديم خدمات عالية الجودة باستخدام أحدث التقنيات والماكينات المتطورة.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-background border-border">
+                <CardContent className="p-6 text-center">
+                  <Users className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-bold text-foreground mb-2">فريق محترف</h3>
+                  <p className="text-foreground/70 text-sm">خبرة أكثر من 5 سنوات</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-background border-border">
+                <CardContent className="p-6 text-center">
+                  <Target className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-bold text-foreground mb-2">دقة عالية</h3>
+                  <p className="text-foreground/70 text-sm">نتائج مثالية في كل مرة</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-background border-border">
+                <CardContent className="p-6 text-center">
+                  <Award className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-bold text-foreground mb-2">جودة مضمونة</h3>
+                  <p className="text-foreground/70 text-sm">ضمان شامل على الأعمال</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-background border-border">
+                <CardContent className="p-6 text-center">
+                  <MapPin className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-bold text-foreground mb-2">موقع مميز</h3>
+                  <p className="text-foreground/70 text-sm">أرمنت الوابورات، الأقصر</p>
+                </CardContent>
+              </Card>
             </div>
           </div>
-
+          
           <div className="relative">
             <img 
               src="/lovable-uploads/271295b7-7e99-47e1-b4c6-b33a750033ad.png" 
-              alt="ورشة المعز" 
-              className="rounded-lg shadow-lg w-full"
+              alt="ورشة المعز لخدمات الليزر" 
+              className="w-full h-auto rounded-2xl shadow-2xl"
             />
-            <div className="absolute inset-0 bg-primary/10 rounded-lg"></div>
           </div>
         </div>
       </div>
