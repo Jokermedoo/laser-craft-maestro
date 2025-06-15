@@ -61,10 +61,18 @@ export const useThemeOperations = () => {
           secondary: `linear-gradient(135deg, hsl(${(hue + 120) % 360}, 60%, 55%) 0%, hsl(${(hue + 180) % 360}, 80%, 60%) 100%)`,
           accent: `linear-gradient(135deg, hsl(${(hue + 240) % 360}, 80%, 60%) 0%, hsl(${(hue + 300) % 360}, 70%, 50%) 100%)`,
         },
+        glassmorphism: {
+          blur: `${Math.floor(Math.random() * 20) + 5}px`,
+          opacity: `${(Math.random() * 0.3 + 0.1).toFixed(2)}`,
+        },
         particles: {
           enabled: true,
           density: Math.floor(Math.random() * 100) + 20,
           color: `hsl(${hue}, 70%, 50%)`,
+        },
+        darkMode: {
+          enabled: true,
+          autoSwitch: false,
         }
       }
     };

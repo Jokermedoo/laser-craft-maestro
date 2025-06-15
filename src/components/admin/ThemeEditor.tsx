@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Palette, Sparkles, Settings } from 'lucide-react';
+import { Palette, Sparkles, Settings, Move } from 'lucide-react';
 import DragDropThemeEditor from './enhanced/DragDropThemeEditor';
 import ComprehensiveThemeEditor from './enhanced/ComprehensiveThemeEditor';
+import UniversalDragDropEditor from './enhanced/UniversalDragDropEditor';
 import QuickThemePresets from './theme/QuickThemePresets';
 import ColorPreview from './theme/ColorPreview';
 
@@ -21,10 +22,14 @@ const ThemeEditor = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-slate-800/50">
+        <TabsList className="grid w-full grid-cols-4 bg-slate-800/50">
           <TabsTrigger value="comprehensive" className="data-[state=active]:bg-purple-600">
             <Settings className="h-4 w-4 ml-2" />
             التحرير الشامل
+          </TabsTrigger>
+          <TabsTrigger value="universal" className="data-[state=active]:bg-purple-600">
+            <Move className="h-4 w-4 ml-2" />
+            السحب والإفلات الشامل
           </TabsTrigger>
           <TabsTrigger value="advanced" className="data-[state=active]:bg-purple-600">
             <Palette className="h-4 w-4 ml-2" />
@@ -38,6 +43,10 @@ const ThemeEditor = () => {
 
         <TabsContent value="comprehensive" className="mt-6">
           <ComprehensiveThemeEditor />
+        </TabsContent>
+
+        <TabsContent value="universal" className="mt-6">
+          <UniversalDragDropEditor />
         </TabsContent>
 
         <TabsContent value="advanced" className="mt-6">
