@@ -2,7 +2,8 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAdmin } from '@/contexts/AdminContext';
-import { Eye, EyeOff, Save, RotateCcw, Home, Shield } from 'lucide-react';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Eye, EyeOff, Save, RotateCcw, Home, Shield, Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AdminHeader = () => {
@@ -26,6 +27,8 @@ const AdminHeader = () => {
     <header className="bg-slate-800/80 backdrop-blur-md border-b border-purple-500/30 sticky top-0 z-50">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-4 rtl:space-x-reverse">
+          <SidebarTrigger className="text-white hover:bg-purple-600/20" />
+          
           <div className="flex items-center space-x-2 rtl:space-x-reverse">
             <Shield className="h-8 w-8 text-purple-400" />
             <div>
@@ -43,7 +46,9 @@ const AdminHeader = () => {
             className="bg-purple-600/20 border-purple-500/50 text-white hover:bg-purple-600/30"
           >
             {previewMode ? <EyeOff className="h-4 w-4 ml-2" /> : <Eye className="h-4 w-4 ml-2" />}
-            {previewMode ? 'إخفاء المعاينة' : 'معاينة مباشرة'}
+            <span className="hidden sm:inline">
+              {previewMode ? 'إخفاء المعاينة' : 'معاينة مباشرة'}
+            </span>
           </Button>
           
           <Button
@@ -52,7 +57,7 @@ const AdminHeader = () => {
             className="bg-green-600 hover:bg-green-700 text-white"
           >
             <Save className="h-4 w-4 ml-2" />
-            حفظ
+            <span className="hidden sm:inline">حفظ</span>
           </Button>
           
           <Button
@@ -62,7 +67,7 @@ const AdminHeader = () => {
             className="border-red-500/50 text-red-400 hover:bg-red-600/20"
           >
             <RotateCcw className="h-4 w-4 ml-2" />
-            إعادة تعيين
+            <span className="hidden sm:inline">إعادة تعيين</span>
           </Button>
           
           <Button
@@ -72,7 +77,7 @@ const AdminHeader = () => {
             className="border-blue-500/50 text-blue-400 hover:bg-blue-600/20"
           >
             <Home className="h-4 w-4 ml-2" />
-            الموقع الرئيسي
+            <span className="hidden sm:inline">الموقع الرئيسي</span>
           </Button>
         </div>
       </div>

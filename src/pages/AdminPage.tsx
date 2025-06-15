@@ -8,6 +8,7 @@ import ContentEditor from '@/components/admin/ContentEditor';
 import ServicesManager from '@/components/admin/ServicesManager';
 import GalleryManager from '@/components/admin/GalleryManager';
 import CompanySettings from '@/components/admin/CompanySettings';
+import SecuritySettings from '@/components/admin/SecuritySettings';
 import LivePreview from '@/components/admin/LivePreview';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
@@ -26,6 +27,8 @@ const AdminPageContent = () => {
         return <GalleryManager />;
       case 'company':
         return <CompanySettings />;
+      case 'security':
+        return <SecuritySettings />;
       case 'preview':
         return <LivePreview />;
       default:
@@ -78,11 +81,11 @@ const AdminPageContent = () => {
               </div>
               
               <div 
-                onClick={() => setActiveSection('preview')}
-                className="bg-gradient-to-br from-cyan-600 to-blue-600 p-6 rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300 shadow-lg"
+                onClick={() => setActiveSection('security')}
+                className="bg-gradient-to-br from-red-600 to-pink-600 p-6 rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300 shadow-lg"
               >
-                <h3 className="text-xl font-bold text-white mb-2">المعاينة المباشرة</h3>
-                <p className="text-cyan-100">مشاهدة التغييرات فوراً</p>
+                <h3 className="text-xl font-bold text-white mb-2">إعدادات الحماية</h3>
+                <p className="text-red-100">أمان وحماية النظام</p>
               </div>
             </div>
 
@@ -114,10 +117,10 @@ const AdminPageContent = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={true}>
         <div className="flex w-full min-h-screen">
           <AdminSidebar activeSection={activeSection} setActiveSection={setActiveSection} />
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-w-0">
             <AdminHeader />
             <main className="flex-1 overflow-auto">
               <div className="h-full">
