@@ -27,7 +27,7 @@ const Services = () => {
         <h2 className="text-4xl font-bold text-center text-foreground mb-12">خدماتنا</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {services.map((service, index) => (
-            <div key={index} className="bg-background p-8 rounded-lg border border-border hover:border-primary transition-colors duration-300 transform hover:-translate-y-2">
+            <div key={index} className="bg-background p-8 rounded-lg border border-border hover:border-primary transition-all duration-300 transform hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/10">
               <div className="flex justify-center mb-4">
                 <service.icon className="h-12 w-12 text-primary" />
               </div>

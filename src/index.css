@@ -5,13 +5,13 @@
 
 @layer base {
   :root {
-    --background: 220 13% 10%; /* #17191c - Dark Blueish Grey */
+    --background: 220 13% 8%; /* #131416 - A bit darker */
     --foreground: 38 60% 90%; /* #f0e9d9 - Cream */
 
-    --card: 220 13% 15%; /* #222429 */
+    --card: 220 13% 12%; /* #1d1f23 - A bit lighter than bg */
     --card-foreground: 38 60% 90%;
 
-    --popover: 220 13% 15%;
+    --popover: 220 13% 12%;
     --popover-foreground: 38 60% 90%;
 
     --primary: 43 80% 60%; /* #d9ae3b - Gold */
@@ -20,17 +20,17 @@
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 220 13% 25%; /* #3a3d45 */
+    --muted: 220 13% 24%; /* #383a42 */
     --muted-foreground: 38 60% 70%; /* #d9d1b6 */
 
-    --accent: 220 13% 25%;
+    --accent: 220 13% 24%;
     --accent-foreground: 38 60% 90%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 13% 20%; /* #2d2f36 */
-    --input: 220 13% 20%;
+    --border: 220 13% 18%; /* #2a2c32 */
+    --input: 220 13% 18%;
     --ring: 43 80% 60%;
 
     --radius: 0.5rem;
@@ -42,8 +42,13 @@
     @apply border-border;
   }
 
+  html {
+    @apply scroll-smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Cairo', sans-serif;
   }
 }
+

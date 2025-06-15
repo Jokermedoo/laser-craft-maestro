@@ -17,7 +17,7 @@ const Features = () => {
         <div className="max-w-3xl mx-auto">
           <ul className="space-y-6">
             {features.map((feature, index) => (
-              <li key={index} className="flex items-start">
+              <li key={index} className="flex items-start p-4 rounded-lg hover:bg-background/50 transition-colors duration-200">
                 <div className="flex-shrink-0">
                   <CheckCircle className="h-7 w-7 text-primary" />
                 </div>
