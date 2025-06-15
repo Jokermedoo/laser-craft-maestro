@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AdminProvider } from '@/contexts/AdminContext';
 import AdminSidebar from '@/components/admin/AdminSidebar';
@@ -13,7 +12,7 @@ import LivePreview from '@/components/admin/LivePreview';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
 const AdminPageContent = () => {
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState('theme'); // تغيير الافتراضي للثيم المحسن
 
   const renderContent = () => {
     switch (activeSection) {
@@ -36,16 +35,19 @@ const AdminPageContent = () => {
           <div className="p-6 max-w-7xl mx-auto">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-white mb-4">لوحة التحكم الرئيسية</h1>
-              <p className="text-gray-300">مرحباً بك في لوحة إدارة ورشة المعز للليزر</p>
+              <p className="text-gray-300">مرحباً بك في لوحة إدارة ورشة المعز للليزر المحسنة</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               <div 
                 onClick={() => setActiveSection('theme')}
-                className="bg-gradient-to-br from-purple-600 to-blue-600 p-6 rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300 shadow-lg"
+                className="bg-gradient-to-br from-purple-600 to-blue-600 p-6 rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300 shadow-lg border border-purple-400/30"
               >
-                <h3 className="text-xl font-bold text-white mb-2">محرر الألوان</h3>
-                <p className="text-purple-100">تخصيص ألوان الموقع بالكامل</p>
+                <h3 className="text-xl font-bold text-white mb-2">🎨 محرر الثيمات المتقدم</h3>
+                <p className="text-purple-100">سحب وإفلات الألوان مع أدوات متقدمة</p>
+                <div className="mt-3 text-xs text-purple-200 bg-purple-400/20 px-2 py-1 rounded">
+                  جديد - مميزات محسنة
+                </div>
               </div>
               
               <div 
