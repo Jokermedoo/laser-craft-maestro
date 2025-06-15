@@ -28,7 +28,7 @@ const Navbar = ({ whatsappNumber }: NavbarProps) => {
           <div className="flex items-center space-x-3 rtl:space-x-reverse">
             <div className="relative">
               <img 
-                src="/lovable-uploads/cda3356a-11e2-4bd5-a33f-f95254a654ed.png" 
+                src="/lovable-uploads/8421f051-5940-44f7-ac37-3f81bfa87243.png" 
                 alt="المعز لوجو" 
                 className="h-14 w-14 rounded-full border-2 border-yellow-400 shadow-lg" 
               />
