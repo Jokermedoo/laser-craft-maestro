@@ -1,14 +1,14 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { MessageSquare, Phone, ArrowRight, Sparkles, Award, Gift } from 'lucide-react';
+import { MessageSquare, Phone, ArrowRight, Sparkles, Gift } from 'lucide-react';
 
 interface HeroProps {
   whatsappNumber: string;
 }
 
-const Hero = ({ whatsappNumber }: HeroProps) => {
+const Hero = memo(({ whatsappNumber }: HeroProps) => {
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 z-10">
       <div className="container mx-auto px-4 sm:px-6 text-center">
@@ -94,6 +94,8 @@ const Hero = ({ whatsappNumber }: HeroProps) => {
       </div>
     </section>
   );
-};
+});
+
+Hero.displayName = 'Hero';
 
 export default Hero;

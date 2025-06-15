@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -18,25 +18,12 @@ interface PerformanceMetrics {
   networkRequests: number;
 }
 
-const PerformanceOptimizer = () => {
+const PerformanceOptimizer = memo(() => {
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [lastOptimization, setLastOptimization] = useState<Date | null>(null);
 
-  useEffect(() => {
-    measurePerformance();
-    
-    // Auto-optimize every 5 minutes
-    const interval = setInterval(() => {
-      if (!isOptimizing) {
-        optimizePerformance();
-      }
-    }, 300000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const measurePerformance = () => {
+  const measurePerformance = useCallback(() => {
     const loadTime = performance.now();
     const domElements = document.querySelectorAll('*').length;
     const memoryUsage = (performance as any).memory?.usedJSHeapSize || 0;
@@ -48,19 +35,19 @@ const PerformanceOptimizer = () => {
       memoryUsage,
       networkRequests
     });
-  };
+  }, []);
 
-  const optimizePerformance = async () => {
+  const optimizePerformance = useCallback(async () => {
     setIsOptimizing(true);
     
     try {
-      // Simulate optimization tasks
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // تحسين الأداء
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Clean up unused resources
+      // تنظيف الموارد غير المستخدمة
       if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-          // Cleanup tasks during idle time
+          // مهام التنظيف أثناء وقت الخمول
           console.log('Performance optimization completed');
         });
       }
@@ -70,35 +57,48 @@ const PerformanceOptimizer = () => {
     } finally {
       setIsOptimizing(false);
     }
-  };
+  }, [measurePerformance]);
 
-  const getPerformanceScore = () => {
+  useEffect(() => {
+    measurePerformance();
+    
+    // تحسين تلقائي كل 5 دقائق
+    const interval = setInterval(() => {
+      if (!isOptimizing) {
+        optimizePerformance();
+      }
+    }, 300000);
+
+    return () => clearInterval(interval);
+  }, [measurePerformance, optimizePerformance, isOptimizing]);
+
+  const getPerformanceScore = useCallback(() => {
     if (!metrics) return 0;
     
     let score = 100;
     
-    // Deduct points based on metrics
+    // خصم نقاط بناء على المقاييس
     if (metrics.loadTime > 3000) score -= 20;
     if (metrics.domElements > 1000) score -= 15;
     if (metrics.memoryUsage > 50000000) score -= 20;
     if (metrics.networkRequests > 50) score -= 10;
     
     return Math.max(0, score);
-  };
+  }, [metrics]);
 
-  const getScoreColor = (score: number) => {
+  const getScoreColor = useCallback((score: number) => {
     if (score >= 80) return 'text-green-400';
     if (score >= 60) return 'text-yellow-400';
     return 'text-red-400';
-  };
+  }, []);
 
-  const formatBytes = (bytes: number) => {
+  const formatBytes = useCallback((bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
+  }, []);
 
   if (!metrics) {
     return (
@@ -192,6 +192,8 @@ const PerformanceOptimizer = () => {
       </Card>
     </div>
   );
-};
+});
+
+PerformanceOptimizer.displayName = 'PerformanceOptimizer';
 
 export default PerformanceOptimizer;

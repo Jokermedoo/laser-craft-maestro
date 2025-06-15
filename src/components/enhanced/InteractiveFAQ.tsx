@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp, MessageSquare, Phone, Search } from 'lucide-react';
@@ -55,27 +55,37 @@ const faqData: FAQItem[] = [
   }
 ];
 
-const InteractiveFAQ = ({ whatsappNumber }: InteractiveFAQProps) => {
+const InteractiveFAQ = React.memo(({ whatsappNumber }: InteractiveFAQProps) => {
   const [openItems, setOpenItems] = useState<number[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('الكل');
 
-  const categories = ['الكل', ...Array.from(new Set(faqData.map(item => item.category)))];
+  const categories = useMemo(() => ['الكل', ...Array.from(new Set(faqData.map(item => item.category)))], []);
 
-  const filteredFAQs = faqData.filter(item => {
-    const matchesSearch = item.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.answer.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'الكل' || item.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredFAQs = useMemo(() => {
+    return faqData.filter(item => {
+      const matchesSearch = item.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           item.answer.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'الكل' || item.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchTerm, selectedCategory]);
 
-  const toggleItem = (id: number) => {
+  const toggleItem = useCallback((id: number) => {
     setOpenItems(prev => 
       prev.includes(id) 
         ? prev.filter(item => item !== id)
         : [...prev, id]
     );
-  };
+  }, []);
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  }, []);
+
+  const handleCategoryChange = useCallback((category: string) => {
+    setSelectedCategory(category);
+  }, []);
 
   return (
     <section className="relative py-20 z-10">
@@ -96,7 +106,7 @@ const InteractiveFAQ = ({ whatsappNumber }: InteractiveFAQProps) => {
                 type="text"
                 placeholder="ابحث في الأسئلة..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleSearchChange}
                 className="pr-10 bg-slate-800/50 border-purple-500/30 text-white placeholder-gray-400"
               />
             </div>
@@ -106,7 +116,7 @@ const InteractiveFAQ = ({ whatsappNumber }: InteractiveFAQProps) => {
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => handleCategoryChange(category)}
                   className="whitespace-nowrap"
                 >
                   {category}
@@ -184,6 +194,8 @@ const InteractiveFAQ = ({ whatsappNumber }: InteractiveFAQProps) => {
       </div>
     </section>
   );
-};
+});
+
+InteractiveFAQ.displayName = 'InteractiveFAQ';
 
 export default InteractiveFAQ;
