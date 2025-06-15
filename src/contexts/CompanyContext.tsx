@@ -7,6 +7,7 @@ interface CompanyInfo {
   whatsapp: string;
   address: string;
   email?: string;
+  secondaryPhone?: string;
 }
 
 interface CompanyContextType {
@@ -16,6 +17,7 @@ interface CompanyContextType {
 const companyInfo: CompanyInfo = {
   name: "ورشة المعز لخدمات الليزر",
   phone: "+20 102 191 1335",
+  secondaryPhone: "+20 114 199 0282",
   whatsapp: "201021911335",
   address: "أرمنت الوابورات، الأقصر",
   email: "info@almaez-laser.com"

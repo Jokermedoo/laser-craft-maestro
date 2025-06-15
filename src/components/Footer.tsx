@@ -1,25 +1,29 @@
 
 import React from 'react';
 import { MessageSquare, Phone, MapPin, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useCompany } from '@/contexts/CompanyContext';
 
 interface FooterProps {
   whatsappNumber: string;
 }
 
 const Footer = ({ whatsappNumber }: FooterProps) => {
+  const { companyInfo } = useCompany();
+
   return (
     <footer className="relative bg-slate-900/80 backdrop-blur-sm border-t border-purple-500/20 py-20 z-10">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div>
-            <div className="flex items-center space-x-3 rtl:space-x-reverse mb-6">
+            <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse mb-6">
               <img 
                 src="/lovable-uploads/8421f051-5940-44f7-ac37-3f81bfa87243.png" 
                 alt="المعز لوجو" 
                 className="h-12 w-12 rounded-full border-2 border-yellow-400" 
               />
               <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">المعز لليزر</h3>
-            </div>
+            </Link>
             <p className="text-gray-400 mb-6 leading-relaxed">
               ورشة متخصصة في تقديم أفضل خدمات الليزر في صعيد مصر
             </p>
@@ -44,6 +48,16 @@ const Footer = ({ whatsappNumber }: FooterProps) => {
           </div>
 
           <div>
+            <h4 className="text-xl font-bold mb-6 text-yellow-400">روابط مهمة</h4>
+            <ul className="space-y-3 text-gray-400">
+              <li><Link to="/" className="hover:text-yellow-400 transition-colors">الرئيسية</Link></li>
+              <li><Link to="/services" className="hover:text-yellow-400 transition-colors">خدماتنا</Link></li>
+              <li><Link to="/gallery" className="hover:text-yellow-400 transition-colors">معرض الأعمال</Link></li>
+              <li><Link to="/contact" className="hover:text-yellow-400 transition-colors">اتصل بنا</Link></li>
+            </ul>
+          </div>
+
+          <div>
             <h4 className="text-xl font-bold mb-6 text-yellow-400">تواصل معنا</h4>
             <div className="space-y-4">
               <a 
@@ -56,16 +70,24 @@ const Footer = ({ whatsappNumber }: FooterProps) => {
               </a>
               
               <a 
-                href="tel:+201021911335"
+                href={`tel:${companyInfo.phone}`}
                 className="flex items-center space-x-3 rtl:space-x-reverse text-gray-400 hover:text-yellow-400 transition-colors group"
               >
                 <Phone className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
-                <span>هاتف: +20 102 191 1335</span>
+                <span>هاتف: {companyInfo.phone}</span>
+              </a>
+
+              <a 
+                href={`tel:${companyInfo.secondaryPhone}`}
+                className="flex items-center space-x-3 rtl:space-x-reverse text-gray-400 hover:text-yellow-400 transition-colors group"
+              >
+                <Phone className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                <span>هاتف: {companyInfo.secondaryPhone}</span>
               </a>
               
               <div className="flex items-start space-x-3 rtl:space-x-reverse text-gray-400">
                 <MapPin className="h-5 w-5 mt-0.5" />
-                <span>أرمنت الوابورات، الأقصر</span>
+                <span>{companyInfo.address}</span>
               </div>
             </div>
           </div>
