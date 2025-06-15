@@ -1,8 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Phone, Menu, X } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Menu, MessageSquare, Phone } from 'lucide-react';
+import { useScroll } from "@/hooks/use-scroll"
+import { Link } from 'react-router-dom';
+import ThemeSwitcher from './ThemeSwitcher';
 
 interface NavbarProps {
   whatsappNumber: string;
@@ -10,112 +12,100 @@ interface NavbarProps {
 
 const Navbar = ({ whatsappNumber }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation();
+  const [isMounted, setIsMounted] = useState(false);
+  const scrolled = useScroll(50);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    setIsMounted(true);
   }, []);
 
-  const navItems = [
-    { to: "/", label: "الرئيسية", hash: "#home" },
-    { to: "/", label: "عن الورشة", hash: "#about" },
-    { to: "/services", label: "خدماتنا" },
-    { to: "/gallery", label: "أعمالنا" },
-    { to: "/contact", label: "اتصل بنا" }
-  ];
-
-  const handleNavClick = (item: typeof navItems[0]) => {
-    setIsMenuOpen(false);
-    if (item.hash && location.pathname === "/") {
-      // If we're on home page and clicking a hash link, scroll to section
-      setTimeout(() => {
-        const element = document.querySelector(item.hash!);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const menuItems = [
+    { name: 'الرئيسية', href: '/' },
+    { name: 'خدماتنا', href: '/services' },
+    { name: 'معرض الأعمال', href: '/gallery' },
+    { name: 'خطوات العمل', href: '/work-steps' },
+    { name: 'أسئلة شائعة', href: '/faq' },
+    { name: 'تواصل معنا', href: '/contact' },
+  ];
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-slate-900/95 backdrop-blur-lg shadow-2xl border-b border-purple-500/20' : 'bg-transparent'
-    }`}>
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          <Link to="/" className="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse">
-            <div className="relative">
-              <img 
-                src="/lovable-uploads/8421f051-5940-44f7-ac37-3f81bfa87243.png" 
-                alt="المعز لوجو" 
-                className="h-10 w-10 sm:h-14 sm:w-14 rounded-full border-2 border-yellow-400 shadow-lg" 
-                loading="eager"
-              />
-              <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
-            </div>
-            <div>
-              <span className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">المعز لليزر</span>
-              <p className="text-xs text-gray-300 hidden sm:block">ورشة متخصصة</p>
-            </div>
-          </Link>
+    <div className={`fixed w-full top-0 z-50 transition-all duration-300 border-b ${scrolled ? "bg-slate-900/70 backdrop-blur-sm border-purple-500/50" : "bg-transparent border-transparent"}`}>
+      <div className="container max-w-screen-xl flex items-center justify-between py-4 px-6">
+        <Link to="/" className="font-bold text-2xl text-white">
+          المعز
+        </Link>
 
-          <div className="hidden md:flex items-center space-x-6 lg:space-x-8 rtl:space-x-reverse">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                onClick={() => handleNavClick(item)}
-                className="text-gray-300 hover:text-yellow-400 transition-all duration-300 relative group text-sm lg:text-base"
-              >
-                {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            ))}
-            <Button asChild className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm px-4 py-2">
-              <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer">
-                <Phone className="ml-2 h-4 w-4" />
-                اطلب الآن
-              </a>
-            </Button>
-          </div>
-
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)} 
-            className="md:hidden text-white p-2 rounded-lg bg-purple-600/20 backdrop-blur-sm"
-          >
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+        <div className="hidden md:flex items-center space-x-6 rtl:space-x-reverse">
+          {menuItems.map((item) => (
+            <Link key={item.name} to={item.href} className="text-gray-300 hover:text-white transition-colors duration-200">
+              {item.name}
+            </Link>
+          ))}
+          <ThemeSwitcher />
+          <Button asChild variant="outline">
+            <a href={`https://wa.me/${whatsappNumber}?text=مرحباً، لدي استفسار`} target="_blank" rel="noopener noreferrer">
+              <MessageSquare className="h-4 w-4 ml-2" />
+              تواصل عبر واتساب
+            </a>
+          </Button>
         </div>
+
+        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="sm" className="md:hidden">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="bg-slate-900/95 backdrop-blur-sm text-white">
+            <SheetHeader>
+              <SheetTitle>القائمة</SheetTitle>
+              <SheetDescription>
+                تصفح خدماتنا ومنتجاتنا
+              </SheetDescription>
+            </SheetHeader>
+            <div className="mt-4">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="block py-2 text-lg hover:bg-slate-800 rounded-md px-4"
+                  onClick={closeMenu}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <div className="py-2 px-4">
+                <ThemeSwitcher />
+              </div>
+              <Button asChild className="w-full mt-4">
+                <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer">
+                  <MessageSquare className="h-4 w-4 ml-2" />
+                  تواصل عبر واتساب
+                </a>
+              </Button>
+              <Button asChild variant="secondary" className="w-full mt-2">
+                <a href="tel:+201141990282">
+                  <Phone className="h-4 w-4 ml-2" />
+                  اتصل بنا
+                </a>
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
-
-      {isMenuOpen && (
-        <div className="md:hidden bg-slate-900/95 backdrop-blur-lg border-t border-purple-500/20">
-          <div className="container mx-auto px-4 py-4 space-y-3">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                onClick={() => handleNavClick(item)}
-                className="block text-gray-300 hover:text-yellow-400 transition-colors text-lg py-2"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Button asChild size="lg" className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold mt-4">
-              <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer">
-                <Phone className="ml-2 h-5 w-5" />
-                اطلب الآن على واتساب
-              </a>
-            </Button>
-          </div>
-        </div>
-      )}
-    </nav>
+    </div>
   );
 };
 

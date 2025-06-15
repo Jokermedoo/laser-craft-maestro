@@ -13,6 +13,8 @@ import AnimatedBackground from '@/components/AnimatedBackground';
 import PromoBanner from '@/components/marketing/PromoBanner';
 import Testimonials from '@/components/marketing/Testimonials';
 import Stats from '@/components/marketing/Stats';
+import PriceCalculator from '@/components/calculator/PriceCalculator';
+import DailyOffers from '@/components/offers/DailyOffers';
 import { CompanyProvider, useCompany } from '@/contexts/CompanyContext';
 
 const IndexContent = () => {
@@ -24,9 +26,11 @@ const IndexContent = () => {
       <Navbar whatsappNumber={companyInfo.whatsapp} />
       <Hero whatsappNumber={companyInfo.whatsapp} />
       <PromoBanner whatsappNumber={companyInfo.whatsapp} />
+      <DailyOffers whatsappNumber={companyInfo.whatsapp} />
       <About />
       <Stats />
       <Services />
+      <PriceCalculator whatsappNumber={companyInfo.whatsapp} />
       <Gallery />
       <Features />
       <Testimonials />
