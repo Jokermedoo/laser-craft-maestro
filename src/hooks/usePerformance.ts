@@ -7,6 +7,18 @@ interface PerformanceMetrics {
   lastUpdate: string;
 }
 
+interface MemoryInfo {
+  usedJSHeapSize?: number;
+  totalJSHeapSize?: number;
+  jsHeapSizeLimit?: number;
+}
+
+declare global {
+  interface Performance {
+    memory?: MemoryInfo;
+  }
+}
+
 export const usePerformance = () => {
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
     loadTime: 0,
@@ -68,7 +80,7 @@ export const usePerformance = () => {
 
     // تنظيف دوري للذاكرة
     const cleanupInterval = setInterval(() => {
-      if (performance.memory && performance.memory.usedJSHeapSize > 100000000) {
+      if (performance.memory && performance.memory.usedJSHeapSize && performance.memory.usedJSHeapSize > 100000000) {
         console.log('High memory usage detected, suggesting cleanup');
       }
     }, 60000);
