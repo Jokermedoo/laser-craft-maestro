@@ -13,6 +13,8 @@ import {
   Monitor
 } from 'lucide-react';
 import { usePerformance } from '@/hooks/usePerformance';
+import { useSmartNotifications } from '@/hooks/useSmartNotifications';
+import AnimatedContainer from './AnimatedContainer';
 
 const PerformanceOptimizer = memo(() => {
   const { 
@@ -22,17 +24,29 @@ const PerformanceOptimizer = memo(() => {
     clearCache, 
     measureCurrentMetrics 
   } = usePerformance();
+  
+  const { showSuccess, showInfo, showWarning } = useSmartNotifications();
   const [isOptimizing, setIsOptimizing] = useState(false);
 
   const handleOptimize = useCallback(async () => {
     setIsOptimizing(true);
     try {
       await optimizePerformance();
-      await new Promise(resolve => setTimeout(resolve, 500)); // تأخير بصري
+      showSuccess('تم تحسين الأداء بنجاح!', {
+        description: 'تم تطبيق جميع التحسينات على النظام'
+      });
+      await new Promise(resolve => setTimeout(resolve, 500));
     } finally {
       setIsOptimizing(false);
     }
-  }, [optimizePerformance]);
+  }, [optimizePerformance, showSuccess]);
+
+  const handleClearCache = useCallback(() => {
+    clearCache();
+    showInfo('تم تنظيف الذاكرة المؤقتة', {
+      description: 'تم حذف جميع البيانات المؤقتة'
+    });
+  }, [clearCache, showInfo]);
 
   const getScoreColor = useCallback((score: number) => {
     if (score >= 80) return 'text-green-400';
@@ -52,9 +66,21 @@ const PerformanceOptimizer = memo(() => {
     return num.toLocaleString('ar-EG');
   }, []);
 
+  useEffect(() => {
+    if (metrics && metrics.score < 60) {
+      showWarning('الأداء يحتاج تحسين', {
+        description: `النتيجة الحالية: ${Math.round(metrics.score)}%`,
+        action: {
+          label: 'تحسين الآن',
+          onClick: handleOptimize
+        }
+      });
+    }
+  }, [metrics, showWarning, handleOptimize]);
+
   if (!metrics) {
     return (
-      <div className="fixed bottom-4 left-4 z-50">
+      <AnimatedContainer type="fade" className="fixed bottom-4 left-4 z-50">
         <Card className="bg-slate-800/90 backdrop-blur-sm border border-purple-500/30">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -63,14 +89,14 @@ const PerformanceOptimizer = memo(() => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </AnimatedContainer>
     );
   }
 
   const score = metrics.score || 0;
 
   return (
-    <div className="fixed bottom-4 left-4 z-50">
+    <AnimatedContainer type="slide" className="fixed bottom-4 left-4 z-50">
       <Card className="bg-slate-800/95 backdrop-blur-sm border border-purple-500/30 hover:border-yellow-400/50 transition-all duration-300 shadow-lg">
         <CardContent className="p-4">
           <div className="flex items-center justify-between gap-4 mb-3">
@@ -129,7 +155,7 @@ const PerformanceOptimizer = memo(() => {
             <Button
               size="sm"
               variant="outline"
-              onClick={clearCache}
+              onClick={handleClearCache}
               className="text-xs border-slate-600"
             >
               <MemoryStick className="h-3 w-3" />
@@ -158,7 +184,7 @@ const PerformanceOptimizer = memo(() => {
           )}
         </CardContent>
       </Card>
-    </div>
+    </AnimatedContainer>
   );
 });
 

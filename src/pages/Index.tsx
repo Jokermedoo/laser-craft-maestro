@@ -19,20 +19,40 @@ import FlashOfferBanner from '@/components/marketing/FlashOfferBanner';
 import InteractiveFAQ from '@/components/enhanced/InteractiveFAQ';
 import ProductShowcase from '@/components/enhanced/ProductShowcase';
 import SpecialOffers from '@/components/enhanced/SpecialOffers';
+import AnimatedContainer from '@/components/enhanced/AnimatedContainer';
 import { CompanyProvider, useCompany } from '@/contexts/CompanyContext';
 
-const IndexContent = () => {
+const IndexContent = React.memo(() => {
   const { companyInfo } = useCompany();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
       <AnimatedBackground />
-      <FlashOfferBanner whatsappNumber={companyInfo.whatsapp} />
-      <Navbar whatsappNumber={companyInfo.whatsapp} />
-      <Hero whatsappNumber={companyInfo.whatsapp} />
-      <PromoBanner whatsappNumber={companyInfo.whatsapp} />
-      <SpecialOffers whatsappNumber={companyInfo.whatsapp} />
-      <DailyOffers whatsappNumber={companyInfo.whatsapp} />
+      
+      <AnimatedContainer type="slide" delay={0.1}>
+        <FlashOfferBanner whatsappNumber={companyInfo.whatsapp} />
+      </AnimatedContainer>
+      
+      <AnimatedContainer type="fade" delay={0.2}>
+        <Navbar whatsappNumber={companyInfo.whatsapp} />
+      </AnimatedContainer>
+      
+      <AnimatedContainer type="scale" delay={0.3}>
+        <Hero whatsappNumber={companyInfo.whatsapp} />
+      </AnimatedContainer>
+      
+      <AnimatedContainer type="slide" delay={0.4}>
+        <PromoBanner whatsappNumber={companyInfo.whatsapp} />
+      </AnimatedContainer>
+      
+      <AnimatedContainer type="fade" delay={0.5}>
+        <SpecialOffers whatsappNumber={companyInfo.whatsapp} />
+      </AnimatedContainer>
+      
+      <AnimatedContainer type="slide" delay={0.6}>
+        <DailyOffers whatsappNumber={companyInfo.whatsapp} />
+      </AnimatedContainer>
+      
       <About />
       <Stats />
       <Services />
@@ -47,7 +67,9 @@ const IndexContent = () => {
       <Footer whatsappNumber={companyInfo.whatsapp} />
     </div>
   );
-};
+});
+
+IndexContent.displayName = 'IndexContent';
 
 const Index = () => {
   return (

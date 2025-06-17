@@ -21,21 +21,19 @@ import ElementPreview from './universal-drag/ElementPreview';
 import LivePreviewPanel from './LivePreviewPanel';
 import ConfigManager from './ConfigManager';
 import { usePerformance } from '@/hooks/usePerformance';
-import { useAutoTheme } from '@/hooks/useAutoTheme';
 
 const UniversalDragDropEditor = () => {
   const [activeTab, setActiveTab] = useState('colors');
   const { measureRenderTime, optimizePerformance } = usePerformance();
-  const { currentTheme, toggleTheme } = useAutoTheme();
   
   const {
     activeId,
-    colorItems,
-    fontItems,
-    layoutItems,
-    componentItems,
-    iconItems,
-    animationItems,
+    colorItems = [],
+    fontItems = [],
+    layoutItems = [],
+    componentItems = [],
+    iconItems = [],
+    animationItems = [],
     handleDragStart,
     handleDragEnd,
     findItemById,
@@ -69,13 +67,12 @@ const UniversalDragDropEditor = () => {
 
   const exportElements = () => {
     const elementsData = {
-      colors: colorItems,
-      fonts: fontItems,
-      layout: layoutItems,
-      components: componentItems,
-      icons: iconItems,
-      animations: animationItems,
-      theme: currentTheme,
+      colors: colorItems || [],
+      fonts: fontItems || [],
+      layout: layoutItems || [],
+      components: componentItems || [],
+      icons: iconItems || [],
+      animations: animationItems || [],
       timestamp: new Date().toISOString()
     };
     

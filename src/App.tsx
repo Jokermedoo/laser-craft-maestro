@@ -1,5 +1,4 @@
 
-import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -12,13 +11,14 @@ import WorkStepsPage from "./pages/WorkStepsPage";
 import FAQPage from "./pages/FAQPage";
 import NotFound from "./pages/NotFound";
 import PerformanceOptimizer from "./components/enhanced/PerformanceOptimizer";
+import SmartToaster from "./components/enhanced/SmartToaster";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
+      <SmartToaster />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
