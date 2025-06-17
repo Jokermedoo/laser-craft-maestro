@@ -8,83 +8,31 @@ import {
   CheckCircle, 
   AlertTriangle,
   TrendingUp,
-  RefreshCw
+  RefreshCw,
+  MemoryStick,
+  Monitor
 } from 'lucide-react';
-
-interface PerformanceMetrics {
-  loadTime: number;
-  domElements: number;
-  memoryUsage: number;
-  networkRequests: number;
-}
+import { usePerformance } from '@/hooks/usePerformance';
 
 const PerformanceOptimizer = memo(() => {
-  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
+  const { 
+    metrics, 
+    isOptimized, 
+    optimizePerformance, 
+    clearCache, 
+    measureCurrentMetrics 
+  } = usePerformance();
   const [isOptimizing, setIsOptimizing] = useState(false);
-  const [lastOptimization, setLastOptimization] = useState<Date | null>(null);
 
-  const measurePerformance = useCallback(() => {
-    const loadTime = performance.now();
-    const domElements = document.querySelectorAll('*').length;
-    const memoryUsage = (performance as any).memory?.usedJSHeapSize || 0;
-    const networkRequests = performance.getEntriesByType('resource').length;
-
-    setMetrics({
-      loadTime,
-      domElements,
-      memoryUsage,
-      networkRequests
-    });
-  }, []);
-
-  const optimizePerformance = useCallback(async () => {
+  const handleOptimize = useCallback(async () => {
     setIsOptimizing(true);
-    
     try {
-      // تحسين الأداء
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // تنظيف الموارد غير المستخدمة
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => {
-          // مهام التنظيف أثناء وقت الخمول
-          console.log('Performance optimization completed');
-        });
-      }
-      
-      measurePerformance();
-      setLastOptimization(new Date());
+      await optimizePerformance();
+      await new Promise(resolve => setTimeout(resolve, 500)); // تأخير بصري
     } finally {
       setIsOptimizing(false);
     }
-  }, [measurePerformance]);
-
-  useEffect(() => {
-    measurePerformance();
-    
-    // تحسين تلقائي كل 5 دقائق
-    const interval = setInterval(() => {
-      if (!isOptimizing) {
-        optimizePerformance();
-      }
-    }, 300000);
-
-    return () => clearInterval(interval);
-  }, [measurePerformance, optimizePerformance, isOptimizing]);
-
-  const getPerformanceScore = useCallback(() => {
-    if (!metrics) return 0;
-    
-    let score = 100;
-    
-    // خصم نقاط بناء على المقاييس
-    if (metrics.loadTime > 3000) score -= 20;
-    if (metrics.domElements > 1000) score -= 15;
-    if (metrics.memoryUsage > 50000000) score -= 20;
-    if (metrics.networkRequests > 50) score -= 10;
-    
-    return Math.max(0, score);
-  }, [metrics]);
+  }, [optimizePerformance]);
 
   const getScoreColor = useCallback((score: number) => {
     if (score >= 80) return 'text-green-400';
@@ -93,11 +41,15 @@ const PerformanceOptimizer = memo(() => {
   }, []);
 
   const formatBytes = useCallback((bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return '0 B';
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }, []);
+
+  const formatNumber = useCallback((num: number) => {
+    return num.toLocaleString('ar-EG');
   }, []);
 
   if (!metrics) {
@@ -115,11 +67,11 @@ const PerformanceOptimizer = memo(() => {
     );
   }
 
-  const score = getPerformanceScore();
+  const score = metrics.score || 0;
 
   return (
     <div className="fixed bottom-4 left-4 z-50">
-      <Card className="bg-slate-800/90 backdrop-blur-sm border border-purple-500/30 hover:border-yellow-400/50 transition-all duration-300">
+      <Card className="bg-slate-800/95 backdrop-blur-sm border border-purple-500/30 hover:border-yellow-400/50 transition-all duration-300 shadow-lg">
         <CardContent className="p-4">
           <div className="flex items-center justify-between gap-4 mb-3">
             <div className="flex items-center gap-2">
@@ -127,7 +79,7 @@ const PerformanceOptimizer = memo(() => {
               <span className="text-white text-sm font-bold">أداء الموقع</span>
             </div>
             <div className={`text-2xl font-bold ${getScoreColor(score)}`}>
-              {score}%
+              {Math.round(score)}%
             </div>
           </div>
           
@@ -137,23 +89,23 @@ const PerformanceOptimizer = memo(() => {
               <span className="text-white">{(metrics.loadTime / 1000).toFixed(2)}ث</span>
             </div>
             <div className="flex justify-between text-xs">
-              <span className="text-gray-400">العناصر:</span>
-              <span className="text-white">{metrics.domElements}</span>
+              <span className="text-gray-400">عناصر DOM:</span>
+              <span className="text-white">{formatNumber(metrics.domElementsCount)}</span>
             </div>
             <div className="flex justify-between text-xs">
-              <span className="text-gray-400">الذاكرة:</span>
+              <span className="text-gray-400">استخدام الذاكرة:</span>
               <span className="text-white">{formatBytes(metrics.memoryUsage)}</span>
             </div>
             <div className="flex justify-between text-xs">
-              <span className="text-gray-400">الطلبات:</span>
-              <span className="text-white">{metrics.networkRequests}</span>
+              <span className="text-gray-400">آخر قياس:</span>
+              <span className="text-white">{(metrics.renderTime).toFixed(1)}ms</span>
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 mb-3">
             <Button
               size="sm"
-              onClick={optimizePerformance}
+              onClick={handleOptimize}
               disabled={isOptimizing}
               className="flex-1 bg-blue-500 hover:bg-blue-600 text-xs"
             >
@@ -168,24 +120,40 @@ const PerformanceOptimizer = memo(() => {
             <Button
               size="sm"
               variant="outline"
-              onClick={measurePerformance}
-              className="text-xs"
+              onClick={measureCurrentMetrics}
+              className="text-xs border-slate-600"
             >
               <TrendingUp className="h-3 w-3" />
             </Button>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={clearCache}
+              className="text-xs border-slate-600"
+            >
+              <MemoryStick className="h-3 w-3" />
+            </Button>
           </div>
 
-          {lastOptimization && (
-            <div className="flex items-center gap-1 mt-2 text-xs text-green-400">
+          {isOptimized && (
+            <div className="flex items-center gap-1 mb-2 text-xs text-green-400">
               <CheckCircle className="h-3 w-3" />
-              <span>آخر تحسين: {lastOptimization.toLocaleTimeString('ar-EG')}</span>
+              <span>النظام محسن</span>
             </div>
           )}
           
           {score < 60 && (
-            <div className="flex items-center gap-1 mt-2 text-xs text-yellow-400">
+            <div className="flex items-center gap-1 text-xs text-yellow-400">
               <AlertTriangle className="h-3 w-3" />
               <span>يحتاج تحسين</span>
+            </div>
+          )}
+
+          {score >= 80 && (
+            <div className="flex items-center gap-1 text-xs text-green-400">
+              <CheckCircle className="h-3 w-3" />
+              <span>أداء ممتاز</span>
             </div>
           )}
         </CardContent>

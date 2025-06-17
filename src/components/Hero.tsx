@@ -1,5 +1,5 @@
 
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MessageSquare, Phone, ArrowRight, Sparkles, Gift } from 'lucide-react';
@@ -9,6 +9,14 @@ interface HeroProps {
 }
 
 const Hero = memo(({ whatsappNumber }: HeroProps) => {
+  const handleWhatsAppClick = useCallback(() => {
+    window.open(`https://wa.me/${whatsappNumber}?text=مرحباً، أريد الاستفادة من عرض خصم 25% على أول طلب لخدمات الليزر`, '_blank');
+  }, [whatsappNumber]);
+
+  const handlePhoneClick = useCallback(() => {
+    window.open('tel:+201141990282');
+  }, []);
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 z-10">
       <div className="container mx-auto px-4 sm:px-6 text-center">
@@ -44,27 +52,23 @@ const Hero = memo(({ whatsappNumber }: HeroProps) => {
         
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16 sm:mb-20">
           <Button 
-            asChild
+            onClick={handleWhatsAppClick}
             size="lg" 
             className="w-full sm:w-auto bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white text-lg sm:text-xl px-8 sm:px-12 py-6 sm:py-8 rounded-2xl font-bold shadow-2xl hover:shadow-red-500/25 transform hover:scale-110 transition-all duration-300 animate-pulse"
           >
-            <a href={`https://wa.me/${whatsappNumber}?text=مرحباً، أريد الاستفادة من عرض خصم 25% على أول طلب لخدمات الليزر`} target="_blank">
-              <Gift className="ml-2 sm:ml-3 h-5 w-5 sm:h-6 sm:w-6" />
-              احصل على خصم 25% الآن!
-              <ArrowRight className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-            </a>
+            <Gift className="ml-2 sm:ml-3 h-5 w-5 sm:h-6 sm:w-6" />
+            احصل على خصم 25% الآن!
+            <ArrowRight className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
           </Button>
           
           <Button 
-            asChild
+            onClick={handlePhoneClick}
             variant="outline" 
             size="lg" 
             className="w-full sm:w-auto border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black text-lg sm:text-xl px-8 sm:px-12 py-6 sm:py-8 rounded-2xl font-bold backdrop-blur-sm bg-white/5 transform hover:scale-105 transition-all duration-300"
           >
-            <a href="tel:+201141990282">
-              <Phone className="ml-2 sm:ml-3 h-5 w-5 sm:h-6 sm:w-6" />
-              اتصل للاستشارة المجانية
-            </a>
+            <Phone className="ml-2 sm:ml-3 h-5 w-5 sm:h-6 sm:w-6" />
+            اتصل للاستشارة المجانية
           </Button>
         </div>
         
