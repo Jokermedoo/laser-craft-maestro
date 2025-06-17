@@ -27,7 +27,7 @@ interface AdminDashboardProps {
 const AdminDashboard = ({ onSectionChange }: AdminDashboardProps) => {
   const { currentUser, canAccess, canEdit, loginAsAdmin, logout, isLoggedIn } = useAdminPermissions();
   const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const [systemStatus, setSystemStatus] = useState({
+  const [systemStatus] = useState({
     uptime: '99.9%',
     activeUsers: 12,
     totalRequests: 1284,
@@ -35,7 +35,6 @@ const AdminDashboard = ({ onSectionChange }: AdminDashboardProps) => {
   });
 
   useEffect(() => {
-    // Auto-login as super admin for demo
     if (!isLoggedIn) {
       loginAsAdmin('super_admin');
     }
