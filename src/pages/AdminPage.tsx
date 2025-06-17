@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AdminProvider } from '@/contexts/AdminContext';
 import AdminSidebar from '@/components/admin/AdminSidebar';
@@ -22,6 +21,11 @@ import DashboardFeatures from '@/components/admin/dashboard/DashboardFeatures';
 import DashboardCards from '@/components/admin/dashboard/DashboardCards';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useAdminShortcuts } from '@/hooks/useKeyboardShortcuts';
+import SmartAssistant from '@/components/admin/ai/SmartAssistant';
+import SEOManager from '@/components/admin/seo/SEOManager';
+import SocialMediaManager from '@/components/admin/social/SocialMediaManager';
+import AdvancedSecurity from '@/components/admin/security/AdvancedSecurity';
+import ExtensionManager from '@/components/admin/extensions/ExtensionManager';
 
 const AdminPageContent = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -62,6 +66,16 @@ const AdminPageContent = () => {
         return <BackupManager />;
       case 'preview':
         return <LivePreview />;
+      case 'ai-assistant':
+        return <SmartAssistant />;
+      case 'seo':
+        return <SEOManager />;
+      case 'social':
+        return <SocialMediaManager />;
+      case 'advanced-security':
+        return <AdvancedSecurity />;
+      case 'extensions':
+        return <ExtensionManager />;
       default:
         return (
           <div className="p-6 max-w-7xl mx-auto">

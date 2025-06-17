@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Sidebar,
@@ -26,7 +25,11 @@ import {
   Calendar,
   DollarSign,
   Bell,
-  Home
+  Home,
+  Bot,
+  Search,
+  Share,
+  Puzzle
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -69,7 +72,34 @@ const AdminSidebar = ({ activeSection, setActiveSection }: AdminSidebarProps) =>
         { id: 'security', title: 'إعدادات الحماية', icon: Shield },
         { id: 'settings', title: 'إعدادات عامة', icon: Settings },
       ]
-    }
+    },
+    {
+      id: 'ai-assistant',
+      title: 'المساعد الذكي',
+      icon: Bot,
+      badge: 'جديد'
+    },
+    {
+      id: 'seo',
+      title: 'إدارة SEO',
+      icon: Search,
+    },
+    {
+      id: 'social',
+      title: 'وسائل التواصل',
+      icon: Share,
+    },
+    {
+      id: 'advanced-security',
+      title: 'الأمان المتقدم',
+      icon: Shield,
+      badge: 'محدث'
+    },
+    {
+      id: 'extensions',
+      title: 'الإضافات',
+      icon: Puzzle,
+    },
   ];
 
   return (
