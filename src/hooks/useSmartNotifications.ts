@@ -1,6 +1,6 @@
 
 import { toast } from 'sonner';
-import { CheckCircle, AlertTriangle, Info, XCircle } from 'lucide-react';
+import React from 'react';
 
 interface NotificationOptions {
   title?: string;
@@ -15,7 +15,6 @@ export const useSmartNotifications = () => {
   const showSuccess = (message: string, options?: NotificationOptions) => {
     toast.success(message, {
       description: options?.description,
-      icon: CheckCircle,
       action: options?.action ? {
         label: options.action.label,
         onClick: options.action.onClick,
@@ -26,7 +25,6 @@ export const useSmartNotifications = () => {
   const showError = (message: string, options?: NotificationOptions) => {
     toast.error(message, {
       description: options?.description,
-      icon: XCircle,
       action: options?.action ? {
         label: options.action.label,
         onClick: options.action.onClick,
@@ -37,7 +35,6 @@ export const useSmartNotifications = () => {
   const showWarning = (message: string, options?: NotificationOptions) => {
     toast.warning(message, {
       description: options?.description,
-      icon: AlertTriangle,
       action: options?.action ? {
         label: options.action.label,
         onClick: options.action.onClick,
@@ -48,7 +45,6 @@ export const useSmartNotifications = () => {
   const showInfo = (message: string, options?: NotificationOptions) => {
     toast.info(message, {
       description: options?.description,
-      icon: Info,
       action: options?.action ? {
         label: options.action.label,
         onClick: options.action.onClick,

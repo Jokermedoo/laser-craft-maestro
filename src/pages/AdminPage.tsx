@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AdminProvider } from '@/contexts/AdminContext';
 import AdminSidebar from '@/components/admin/AdminSidebar';
@@ -26,6 +27,7 @@ import SEOManager from '@/components/admin/seo/SEOManager';
 import SocialMediaManager from '@/components/admin/social/SocialMediaManager';
 import AdvancedSecurity from '@/components/admin/security/AdvancedSecurity';
 import ExtensionManager from '@/components/admin/extensions/ExtensionManager';
+import AdvancedWebsiteBuilder from '@/components/admin/site-builder/AdvancedWebsiteBuilder';
 
 const AdminPageContent = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -38,6 +40,8 @@ const AdminPageContent = () => {
 
   const renderContent = () => {
     switch (activeSection) {
+      case 'website-builder':
+        return <AdvancedWebsiteBuilder />;
       case 'theme':
         return <ThemeEditor />;
       case 'content':
@@ -80,8 +84,9 @@ const AdminPageContent = () => {
         return (
           <div className="p-6 max-w-7xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-4xl font-bold text-white mb-4">🏢 لوحة التحكم الرئيسية المطورة</h1>
+              <h1 className="text-4xl font-bold text-white mb-4">🏢 لوحة التحكم الرئيس ية المطورة</h1>
               <p className="text-gray-300 text-lg">منصة إدارة شاملة لورشة المعز للليزر مع أدوات متقدمة وذكية</p>
+              <p className="text-purple-400 mt-2">طور بواسطة محمد سليم</p>
             </div>
             
             <DashboardCards onSectionChange={setActiveSection} />

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 interface AnimatedContainerProps {
   children: React.ReactNode;
@@ -17,31 +17,29 @@ const AnimatedContainer = ({
   duration = 0.3,
   type = 'fade'
 }: AnimatedContainerProps) => {
-  const variants = {
-    fade: {
-      hidden: { opacity: 0 },
-      visible: { opacity: 1 }
-    },
-    slide: {
-      hidden: { opacity: 0, y: 20 },
-      visible: { opacity: 1, y: 0 }
-    },
-    scale: {
-      hidden: { opacity: 0, scale: 0.95 },
-      visible: { opacity: 1, scale: 1 }
-    },
-    bounce: {
-      hidden: { opacity: 0, scale: 0.8 },
-      visible: { 
-        opacity: 1, 
-        scale: 1,
-        transition: {
-          type: "spring",
-          stiffness: 300,
-          damping: 20
+  const variants: Variants = {
+    hidden: type === 'fade' 
+      ? { opacity: 0 }
+      : type === 'slide'
+      ? { opacity: 0, y: 20 }
+      : type === 'scale'
+      ? { opacity: 0, scale: 0.95 }
+      : { opacity: 0, scale: 0.8 },
+    visible: type === 'fade'
+      ? { opacity: 1 }
+      : type === 'slide'
+      ? { opacity: 1, y: 0 }
+      : type === 'scale'
+      ? { opacity: 1, scale: 1 }
+      : { 
+          opacity: 1, 
+          scale: 1,
+          transition: {
+            type: "spring" as const,
+            stiffness: 300,
+            damping: 20
+          }
         }
-      }
-    }
   };
 
   return (
@@ -49,7 +47,7 @@ const AnimatedContainer = ({
       className={className}
       initial="hidden"
       animate="visible"
-      variants={variants[type]}
+      variants={variants}
       transition={{ duration, delay }}
     >
       {children}
