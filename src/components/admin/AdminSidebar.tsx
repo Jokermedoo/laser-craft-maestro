@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Sidebar,
@@ -38,7 +39,7 @@ interface AdminSidebarProps {
 }
 
 const AdminSidebar = ({ activeSection, setActiveSection }: AdminSidebarProps) => {
-  const menuItems = [
+  const menuGroups = [
     {
       group: 'الرئيسية',
       items: [
@@ -74,32 +75,15 @@ const AdminSidebar = ({ activeSection, setActiveSection }: AdminSidebarProps) =>
       ]
     },
     {
-      id: 'ai-assistant',
-      title: 'المساعد الذكي',
-      icon: Bot,
-      badge: 'جديد'
-    },
-    {
-      id: 'seo',
-      title: 'إدارة SEO',
-      icon: Search,
-    },
-    {
-      id: 'social',
-      title: 'وسائل التواصل',
-      icon: Share,
-    },
-    {
-      id: 'advanced-security',
-      title: 'الأمان المتقدم',
-      icon: Shield,
-      badge: 'محدث'
-    },
-    {
-      id: 'extensions',
-      title: 'الإضافات',
-      icon: Puzzle,
-    },
+      group: 'أدوات متقدمة',
+      items: [
+        { id: 'ai-assistant', title: 'المساعد الذكي', icon: Bot, badge: 'جديد' },
+        { id: 'seo', title: 'إدارة SEO', icon: Search },
+        { id: 'social', title: 'وسائل التواصل', icon: Share },
+        { id: 'advanced-security', title: 'الأمان المتقدم', icon: Shield, badge: 'محدث' },
+        { id: 'extensions', title: 'الإضافات', icon: Puzzle },
+      ]
+    }
   ];
 
   return (
@@ -117,7 +101,7 @@ const AdminSidebar = ({ activeSection, setActiveSection }: AdminSidebarProps) =>
       </SidebarHeader>
       
       <SidebarContent className="px-4">
-        {menuItems.map((group, groupIndex) => (
+        {menuGroups.map((group, groupIndex) => (
           <SidebarGroup key={groupIndex}>
             <SidebarGroupLabel className="text-purple-300 font-semibold text-sm mb-2">
               {group.group}
@@ -141,6 +125,11 @@ const AdminSidebar = ({ activeSection, setActiveSection }: AdminSidebarProps) =>
                       {(item.id === 'users' || item.id === 'bookings' || item.id === 'finance' || item.id === 'reports' || item.id === 'notifications') && (
                         <span className="mr-auto bg-green-500 text-xs px-2 py-0.5 rounded-full text-black font-bold">
                           جديد
+                        </span>
+                      )}
+                      {item.badge && (
+                        <span className="mr-auto bg-blue-500 text-xs px-2 py-0.5 rounded-full text-white font-bold">
+                          {item.badge}
                         </span>
                       )}
                     </SidebarMenuButton>
