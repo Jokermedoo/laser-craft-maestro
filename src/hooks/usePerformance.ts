@@ -1,131 +1,106 @@
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface PerformanceMetrics {
+  score: number;
   loadTime: number;
-  renderTime: number;
-  lastUpdate: string;
   memoryUsage: number;
-  domElementsCount: number;
-}
-
-interface MemoryInfo {
-  usedJSHeapSize?: number;
-  totalJSHeapSize?: number;
-  jsHeapSizeLimit?: number;
-}
-
-declare global {
-  interface Performance {
-    memory?: MemoryInfo;
-  }
+  renderTime: number;
+  bundleSize: number;
 }
 
 export const usePerformance = () => {
-  const [metrics, setMetrics] = useState<PerformanceMetrics>({
-    loadTime: 0,
-    renderTime: 0,
-    lastUpdate: '',
-    memoryUsage: 0,
-    domElementsCount: 0
-  });
+  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [isOptimized, setIsOptimized] = useState(false);
 
-  const measureRenderTime = useCallback((componentName: string) => {
-    const startTime = performance.now();
-    return () => {
-      const endTime = performance.now();
-      const renderTime = endTime - startTime;
-      
-      // فقط للتطوير
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`${componentName} render time: ${renderTime.toFixed(2)}ms`);
-      }
-      
-      setMetrics(prev => ({
-        ...prev,
-        renderTime,
-        lastUpdate: new Date().toISOString()
-      }));
-    };
-  }, []);
-
   const measureCurrentMetrics = useCallback(() => {
-    const memoryUsage = performance.memory?.usedJSHeapSize || 0;
-    const domElementsCount = document.querySelectorAll('*').length;
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    const loadTime = navigation.loadEventEnd - navigation.loadEventStart;
     
-    setMetrics(prev => ({
-      ...prev,
+    // قياس استخدام الذاكرة
+    const memoryInfo = (performance as any).memory;
+    const memoryUsage = memoryInfo ? memoryInfo.usedJSHeapSize / 1024 / 1024 : 0;
+    
+    // حساب النقاط
+    let score = 100;
+    if (loadTime > 3000) score -= 20;
+    if (memoryUsage > 50) score -= 15;
+    
+    const newMetrics: PerformanceMetrics = {
+      score: Math.max(0, score),
+      loadTime,
       memoryUsage,
-      domElementsCount,
-      lastUpdate: new Date().toISOString()
-    }));
+      renderTime: performance.now(),
+      bundleSize: 0
+    };
+    
+    setMetrics(newMetrics);
+    return newMetrics;
   }, []);
 
-  const optimizePerformance = useCallback(() => {
-    setIsOptimized(true);
+  const optimizePerformance = useCallback(async () => {
+    console.log('بدء تحسين الأداء...');
     
-    // تفعيل التخزين المؤقت
-    localStorage.setItem('performance_optimized', 'true');
-    
-    // تحديث المقاييس
-    measureCurrentMetrics();
-    
-    // تنظيف الذاكرة إذا كان متاحاً
-    if ('gc' in window && typeof (window as any).gc === 'function') {
-      (window as any).gc();
+    // تنظيف الذاكرة المؤقتة
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map(cacheName => caches.delete(cacheName))
+      );
     }
     
-    console.log('Performance optimization completed');
+    // تحسين DOM
+    const unusedElements = document.querySelectorAll('[data-unused="true"]');
+    unusedElements.forEach(el => el.remove());
+    
+    setIsOptimized(true);
+    
+    // إعادة قياس المؤشرات
+    setTimeout(() => {
+      measureCurrentMetrics();
+    }, 1000);
+    
+    console.log('تم تحسين الأداء بنجاح');
   }, [measureCurrentMetrics]);
 
   const clearCache = useCallback(() => {
-    // تنظيف التخزين المؤقت
+    localStorage.clear();
     sessionStorage.clear();
     
-    // إعادة تعيين الحالة
-    setIsOptimized(false);
-    localStorage.removeItem('performance_optimized');
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(registration => registration.unregister());
+      });
+    }
     
-    measureCurrentMetrics();
-  }, [measureCurrentMetrics]);
+    console.log('تم تنظيف الذاكرة المؤقتة');
+  }, []);
 
-  const optimizedMetrics = useMemo(() => ({
-    ...metrics,
-    score: Math.max(0, Math.min(100, 100 - (metrics.renderTime / 10) - (metrics.memoryUsage / 10000000)))
-  }), [metrics]);
+  const measureRenderTime = useCallback((componentName: string) => {
+    const startTime = performance.now();
+    
+    return () => {
+      const endTime = performance.now();
+      console.log(`${componentName} render time: ${endTime - startTime}ms`);
+    };
+  }, []);
 
   useEffect(() => {
-    const cached = localStorage.getItem('performance_optimized');
-    if (cached === 'true') {
-      setIsOptimized(true);
-    }
-
-    // قياس وقت التحميل الأولي
-    const loadTime = performance.now();
-    setMetrics(prev => ({ ...prev, loadTime }));
-
-    // قياس المقاييس الأولية
     measureCurrentMetrics();
-
-    // تنظيف دوري للذاكرة (كل دقيقة)
-    const cleanupInterval = setInterval(() => {
+    
+    const interval = setInterval(() => {
       measureCurrentMetrics();
-      
-      if (performance.memory && performance.memory.usedJSHeapSize && performance.memory.usedJSHeapSize > 100000000) {
-        console.warn('High memory usage detected, consider cleanup');
-      }
-    }, 60000);
-
-    return () => clearInterval(cleanupInterval);
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, [measureCurrentMetrics]);
 
   return {
-    metrics: optimizedMetrics,
+    metrics,
     isOptimized,
-    measureRenderTime,
     optimizePerformance,
     clearCache,
-    measureCurrentMetrics
+    measureCurrentMetrics,
+    measureRenderTime
   };
 };
