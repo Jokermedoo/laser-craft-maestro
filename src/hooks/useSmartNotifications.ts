@@ -5,16 +5,41 @@ import React from 'react';
 interface NotificationOptions {
   title?: string;
   description?: string;
+  duration?: number;
   action?: {
     label: string;
     onClick: () => void;
   };
+  icon?: React.ReactNode;
+}
+
+interface NotificationHistory {
+  id: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+  message: string;
+  timestamp: Date;
+  read: boolean;
 }
 
 export const useSmartNotifications = () => {
+  const [notifications, setNotifications] = React.useState<NotificationHistory[]>([]);
+
+  const addToHistory = (type: NotificationHistory['type'], message: string) => {
+    const newNotification: NotificationHistory = {
+      id: Date.now().toString(),
+      type,
+      message,
+      timestamp: new Date(),
+      read: false,
+    };
+    setNotifications(prev => [newNotification, ...prev.slice(0, 49)]); // Keep last 50
+  };
+
   const showSuccess = (message: string, options?: NotificationOptions) => {
+    addToHistory('success', message);
     toast.success(message, {
       description: options?.description,
+      duration: options?.duration || 4000,
       action: options?.action ? {
         label: options.action.label,
         onClick: options.action.onClick,
@@ -23,8 +48,10 @@ export const useSmartNotifications = () => {
   };
 
   const showError = (message: string, options?: NotificationOptions) => {
+    addToHistory('error', message);
     toast.error(message, {
       description: options?.description,
+      duration: options?.duration || 6000,
       action: options?.action ? {
         label: options.action.label,
         onClick: options.action.onClick,
@@ -33,8 +60,10 @@ export const useSmartNotifications = () => {
   };
 
   const showWarning = (message: string, options?: NotificationOptions) => {
+    addToHistory('warning', message);
     toast.warning(message, {
       description: options?.description,
+      duration: options?.duration || 5000,
       action: options?.action ? {
         label: options.action.label,
         onClick: options.action.onClick,
@@ -43,8 +72,10 @@ export const useSmartNotifications = () => {
   };
 
   const showInfo = (message: string, options?: NotificationOptions) => {
+    addToHistory('info', message);
     toast.info(message, {
       description: options?.description,
+      duration: options?.duration || 4000,
       action: options?.action ? {
         label: options.action.label,
         onClick: options.action.onClick,
@@ -55,9 +86,41 @@ export const useSmartNotifications = () => {
   const showLoading = (message: string, promise: Promise<any>) => {
     return toast.promise(promise, {
       loading: message,
-      success: 'تم بنجاح!',
-      error: 'حدث خطأ',
+      success: (data) => {
+        addToHistory('success', 'تم بنجاح!');
+        return 'تم بنجاح!';
+      },
+      error: (error) => {
+        addToHistory('error', 'حدث خطأ');
+        return 'حدث خطأ';
+      },
     });
+  };
+
+  const showCustom = (content: React.ReactNode, options?: NotificationOptions) => {
+    toast.custom(content, {
+      duration: options?.duration || 4000,
+    });
+  };
+
+  const markAsRead = (id: string) => {
+    setNotifications(prev => 
+      prev.map(n => n.id === id ? { ...n, read: true } : n)
+    );
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => 
+      prev.map(n => ({ ...n, read: true }))
+    );
+  };
+
+  const clearHistory = () => {
+    setNotifications([]);
+  };
+
+  const getUnreadCount = () => {
+    return notifications.filter(n => !n.read).length;
   };
 
   return {
@@ -66,5 +129,11 @@ export const useSmartNotifications = () => {
     showWarning,
     showInfo,
     showLoading,
+    showCustom,
+    notifications,
+    markAsRead,
+    markAllAsRead,
+    clearHistory,
+    getUnreadCount,
   };
 };

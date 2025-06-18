@@ -2,11 +2,11 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bell, Settings, MessageSquare } from 'lucide-react';
-import SmartNotificationCenter from './SmartNotificationCenter';
+import EnhancedNotificationCenter from './EnhancedNotificationCenter';
 import NotificationTemplates from './NotificationTemplates';
 
 const NotificationCenter = () => {
-  const [activeTab, setActiveTab] = useState('center');
+  const [activeTab, setActiveTab] = useState('enhanced');
 
   return (
     <div className="space-y-6">
@@ -15,14 +15,15 @@ const NotificationCenter = () => {
         <div>
           <h2 className="text-2xl font-bold text-white">مركز الإشعارات المتقدم</h2>
           <p className="text-gray-400">إدارة شاملة للإشعارات والرسائل</p>
+          <p className="text-sm text-purple-400">طور بواسطة محمد سليم</p>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-slate-800/50">
-          <TabsTrigger value="center" className="data-[state=active]:bg-purple-600">
+          <TabsTrigger value="enhanced" className="data-[state=active]:bg-purple-600">
             <MessageSquare className="h-4 w-4 ml-2" />
-            مركز الإشعارات
+            مركز الإشعارات المحسن
           </TabsTrigger>
           <TabsTrigger value="templates" className="data-[state=active]:bg-purple-600">
             <Settings className="h-4 w-4 ml-2" />
@@ -34,8 +35,8 @@ const NotificationCenter = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="center" className="mt-6">
-          <SmartNotificationCenter />
+        <TabsContent value="enhanced" className="mt-6">
+          <EnhancedNotificationCenter />
         </TabsContent>
 
         <TabsContent value="templates" className="mt-6">

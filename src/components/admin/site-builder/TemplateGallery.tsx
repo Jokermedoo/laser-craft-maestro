@@ -45,7 +45,21 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
           secondary: 'Inter, sans-serif',
         }
       },
-      layout: []
+      layout: [
+        {
+          id: 'hero-1',
+          type: 'hero',
+          content: {
+            title: 'شركة الابتكار للحلول التقنية',
+            subtitle: 'نحن رواد التحول الرقمي',
+            description: 'نقدم أفضل الحلول التقنية المبتكرة لنمو أعمالك',
+            buttonText: 'اكتشف خدماتنا'
+          },
+          style: {},
+          visible: true,
+          order: 1,
+        }
+      ]
     },
     {
       id: 'laser-workshop',
@@ -69,11 +83,177 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
           secondary: 'Inter, sans-serif',
         }
       },
-      layout: []
+      layout: [
+        {
+          id: 'hero-2',
+          type: 'hero',
+          content: {
+            title: 'ورشة المعز لخدمات الليزر',
+            subtitle: 'الدقة والإتقان في كل قطعة',
+            description: 'متخصصون في النقش والحفر بالليزر بأحدث التقنيات',
+            buttonText: 'اطلب خدمتك الآن'
+          },
+          style: {},
+          visible: true,
+          order: 1,
+        }
+      ]
+    },
+    {
+      id: 'medical-clinic',
+      name: 'عيادة طبية متطورة',
+      description: 'قالب احترافي للعيادات والمراكز الطبية',
+      category: 'طبي',
+      preview: '/placeholder.svg',
+      rating: 4.9,
+      downloads: 890,
+      config: {
+        name: 'عيادة الشفاء الطبية',
+        colors: {
+          primary: '#10B981',
+          secondary: '#059669',
+          accent: '#3B82F6',
+          background: '#F8FAFC',
+          text: '#1E293B',
+        },
+        fonts: {
+          primary: 'Cairo, sans-serif',
+          secondary: 'Inter, sans-serif',
+        }
+      },
+      layout: [
+        {
+          id: 'hero-3',
+          type: 'hero',
+          content: {
+            title: 'عيادة الشفاء الطبية',
+            subtitle: 'صحتك أولويتنا',
+            description: 'نقدم أفضل الخدمات الطبية بأحدث التقنيات والمعدات',
+            buttonText: 'احجز موعدك'
+          },
+          style: {},
+          visible: true,
+          order: 1,
+        }
+      ]
+    },
+    {
+      id: 'restaurant-modern',
+      name: 'مطعم عصري',
+      description: 'قالب أنيق للمطاعم والمقاهي',
+      category: 'مطاعم',
+      preview: '/placeholder.svg',
+      rating: 4.7,
+      downloads: 1450,
+      config: {
+        name: 'مطعم الذواقة',
+        colors: {
+          primary: '#DC2626',
+          secondary: '#B91C1C',
+          accent: '#F59E0B',
+          background: '#FEF2F2',
+          text: '#7F1D1D',
+        },
+        fonts: {
+          primary: 'Cairo, sans-serif',
+          secondary: 'Playfair Display, serif',
+        }
+      },
+      layout: [
+        {
+          id: 'hero-4',
+          type: 'hero',
+          content: {
+            title: 'مطعم الذواقة',
+            subtitle: 'نكهات استثنائية وتجربة لا تُنسى',
+            description: 'اكتشف أشهى الأطباق المحضرة بعناية من أجود المكونات',
+            buttonText: 'احجز طاولتك'
+          },
+          style: {},
+          visible: true,
+          order: 1,
+        }
+      ]
+    },
+    {
+      id: 'tech-startup',
+      name: 'شركة تقنية ناشئة',
+      description: 'قالب عصري للشركات التقنية الناشئة',
+      category: 'تقنية',
+      preview: '/placeholder.svg',
+      rating: 4.8,
+      downloads: 670,
+      config: {
+        name: 'تك إنوفيشن',
+        colors: {
+          primary: '#6366F1',
+          secondary: '#4F46E5',
+          accent: '#EC4899',
+          background: '#0F172A',
+          text: '#F1F5F9',
+        },
+        fonts: {
+          primary: 'Inter, sans-serif',
+          secondary: 'JetBrains Mono, monospace',
+        }
+      },
+      layout: [
+        {
+          id: 'hero-5',
+          type: 'hero',
+          content: {
+            title: 'تك إنوفيشن',
+            subtitle: 'نبني مستقبل التكنولوجيا',
+            description: 'حلول برمجية متطورة ومبتكرة لتحويل أفكارك إلى واقع رقمي',
+            buttonText: 'ابدأ مشروعك'
+          },
+          style: {},
+          visible: true,
+          order: 1,
+        }
+      ]
+    },
+    {
+      id: 'fashion-boutique',
+      name: 'بوتيك أزياء',
+      description: 'قالب أنيق لمحلات الأزياء والموضة',
+      category: 'أزياء',
+      preview: '/placeholder.svg',
+      rating: 4.6,
+      downloads: 920,
+      config: {
+        name: 'بوتيك الأناقة',
+        colors: {
+          primary: '#BE185D',
+          secondary: '#9D174D',
+          accent: '#F472B6',
+          background: '#FDF2F8',
+          text: '#831843',
+        },
+        fonts: {
+          primary: 'Playfair Display, serif',
+          secondary: 'Inter, sans-serif',
+        }
+      },
+      layout: [
+        {
+          id: 'hero-6',
+          type: 'hero',
+          content: {
+            title: 'بوتيك الأناقة',
+            subtitle: 'حيث تلتقي الموضة بالأناقة',
+            description: 'اكتشف أحدث صيحات الموضة والأزياء العصرية',
+            buttonText: 'تسوق الآن'
+          },
+          style: {},
+          visible: true,
+          order: 1,
+        }
+      ]
     }
   ];
 
-  const categories = ['الكل', 'أعمال', 'ورش', 'تقنية', 'طبي'];
+  const categories = ['الكل', 'أعمال', 'ورش', 'تقنية', 'طبي', 'مطاعم', 'أزياء'];
   const [selectedCategory, setSelectedCategory] = React.useState('الكل');
 
   const filteredTemplates = selectedCategory === 'الكل' 
@@ -156,7 +336,7 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
             </p>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-purple-400">6+</div>
+                <div className="text-2xl font-bold text-purple-400">{templates.length}+</div>
                 <div className="text-sm text-gray-400">قوالب متاحة</div>
               </div>
               <div>
@@ -164,7 +344,9 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
                 <div className="text-sm text-gray-400">متوسط التقييم</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-green-400">4.8K</div>
+                <div className="text-2xl font-bold text-green-400">
+                  {templates.reduce((sum, t) => sum + t.downloads, 0).toLocaleString()}
+                </div>
                 <div className="text-sm text-gray-400">إجمالي التحميلات</div>
               </div>
             </div>
