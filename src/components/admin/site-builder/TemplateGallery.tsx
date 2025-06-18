@@ -48,78 +48,6 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
       layout: []
     },
     {
-      id: 'creative-portfolio',
-      name: 'المعرض الإبداعي',
-      description: 'قالب مثالي للمصممين والفنانين',
-      category: 'معرض أعمال',
-      preview: '/placeholder.svg',
-      rating: 4.9,
-      downloads: 980,
-      config: {
-        name: 'استوديو الإبداع',
-        colors: {
-          primary: '#8B5CF6',
-          secondary: '#A855F7',
-          accent: '#EC4899',
-          background: '#0F0F23',
-          text: '#FFFFFF',
-        },
-        fonts: {
-          primary: 'Tajawal, sans-serif',
-          secondary: 'Roboto, sans-serif',
-        }
-      },
-      layout: []
-    },
-    {
-      id: 'restaurant-menu',
-      name: 'مطعم وقائمة طعام',
-      description: 'قالب مخصص للمطاعم والكافيهات',
-      category: 'مطاعم',
-      preview: '/placeholder.svg',
-      rating: 4.7,
-      downloads: 750,
-      config: {
-        name: 'مطعم الذواقة',
-        colors: {
-          primary: '#DC2626',
-          secondary: '#B91C1C',
-          accent: '#F59E0B',
-          background: '#FEF7ED',
-          text: '#1F2937',
-        },
-        fonts: {
-          primary: 'Amiri, serif',
-          secondary: 'Cairo, sans-serif',
-        }
-      },
-      layout: []
-    },
-    {
-      id: 'tech-startup',
-      name: 'شركة التقنية الناشئة',
-      description: 'قالب مبتكر للشركات التقنية',
-      category: 'تقنية',
-      preview: '/placeholder.svg',
-      rating: 4.6,
-      downloads: 650,
-      config: {
-        name: 'تك إنوفيشن',
-        colors: {
-          primary: '#06B6D4',
-          secondary: '#0891B2',
-          accent: '#10B981',
-          background: '#0F172A',
-          text: '#F8FAFC',
-        },
-        fonts: {
-          primary: 'Almarai, sans-serif',
-          secondary: 'Inter, sans-serif',
-        }
-      },
-      layout: []
-    },
-    {
       id: 'laser-workshop',
       name: 'ورشة الليزر المتخصصة',
       description: 'قالب مخصص لورش النقش بالليزر',
@@ -142,34 +70,10 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
         }
       },
       layout: []
-    },
-    {
-      id: 'medical-clinic',
-      name: 'العيادة الطبية',
-      description: 'قالب مهني للعيادات والمراكز الطبية',
-      category: 'طبي',
-      preview: '/placeholder.svg',
-      rating: 4.8,
-      downloads: 890,
-      config: {
-        name: 'مركز الشفاء الطبي',
-        colors: {
-          primary: '#059669',
-          secondary: '#047857',
-          accent: '#2563EB',
-          background: '#FFFFFF',
-          text: '#1F2937',
-        },
-        fonts: {
-          primary: 'Cairo, sans-serif',
-          secondary: 'Open Sans, sans-serif',
-        }
-      },
-      layout: []
     }
   ];
 
-  const categories = ['الكل', 'أعمال', 'معرض أعمال', 'مطاعم', 'تقنية', 'ورش', 'طبي'];
+  const categories = ['الكل', 'أعمال', 'ورش', 'تقنية', 'طبي'];
   const [selectedCategory, setSelectedCategory] = React.useState('الكل');
 
   const filteredTemplates = selectedCategory === 'الكل' 
@@ -178,13 +82,11 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
 
   return (
     <div className="space-y-6">
-      {/* فلاتر الفئات */}
       <div className="flex flex-wrap gap-2">
         {categories.map((category) => (
           <Badge
             key={category}
-            variant={selecte
- Category === category ? 'default' : 'outline'}
+            variant={selectedCategory === category ? 'default' : 'outline'}
             onClick={() => setSelectedCategory(category)}
             className="cursor-pointer hover:bg-purple-600/20"
           >
@@ -193,7 +95,6 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
         ))}
       </div>
 
-      {/* معرض القوالب */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTemplates.map((template) => (
           <Card key={template.id} className="bg-slate-800/50 border-purple-500/30 hover:border-purple-400 transition-all group">
@@ -246,7 +147,6 @@ const TemplateGallery = ({ onTemplateSelect }: TemplateGalleryProps) => {
         ))}
       </div>
 
-      {/* معلومات إضافية */}
       <Card className="bg-slate-800/50 border-purple-500/30">
         <CardContent className="p-6">
           <div className="text-center">

@@ -1,12 +1,26 @@
 
 import React from 'react';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  arrayMove,
+} from '@dnd-kit/sortable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Layout } from 'lucide-react';
+import { Layout, Plus, Eye, EyeOff } from 'lucide-react';
 import { LayoutElement } from '@/hooks/useSiteBuilder';
 import SortableLayoutElement from './SortableLayoutElement';
+import { useSmartNotifications } from '@/hooks/useSmartNotifications';
 
 interface DragDropLayoutEditorProps {
   elements: LayoutElement[];
@@ -14,66 +28,91 @@ interface DragDropLayoutEditorProps {
 }
 
 const DragDropLayoutEditor = ({ elements, onChange }: DragDropLayoutEditorProps) => {
+  const [activeId, setActiveId] = React.useState<string | null>(null);
+  const { showSuccess } = useSmartNotifications();
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
       },
     }),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
-  const availableElements = [
-    { type: 'hero', name: 'قسم البطل', icon: '🏆' },
-    { type: 'services', name: 'الخدمات', icon: '⚙️' },
-    { type: 'products', name: 'المنتجات', icon: '📦' },
-    { type: 'about', name: 'من نحن', icon: '👥' },
-    { type: 'gallery', name: 'المعرض', icon: '🖼️' },
-    { type: 'contact', name: 'اتصل بنا', icon: '📞' },
-  ];
+  const handleDragStart = (event: any) => {
+    setActiveId(event.active.id);
+  };
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
-    
+
     if (active.id !== over?.id) {
       const oldIndex = elements.findIndex((item) => item.id === active.id);
       const newIndex = elements.findIndex((item) => item.id === over.id);
       
-      const newElements = [...elements];
-      const [reorderedItem] = newElements.splice(oldIndex, 1);
-      newElements.splice(newIndex, 0, reorderedItem);
-      
-      // Update order numbers
-      const reorderedElements = newElements.map((el, index) => ({
+      const newElements = arrayMove(elements, oldIndex, newIndex).map((el, index) => ({
         ...el,
         order: index + 1
       }));
       
-      onChange(reorderedElements);
+      onChange(newElements);
+      showSuccess('تم إعادة ترتيب العناصر بنجاح');
     }
+
+    setActiveId(null);
   };
 
-  const addElement = (type: string) => {
+  const addElement = (type: LayoutElement['type']) => {
     const newElement: LayoutElement = {
       id: `${type}-${Date.now()}`,
-      type: type as LayoutElement['type'],
+      type,
       content: getDefaultContent(type),
       style: {},
       visible: true,
       order: elements.length + 1,
     };
-    
+
     onChange([...elements, newElement]);
+    showSuccess(`تم إضافة عنصر ${type} بنجاح`);
   };
 
-  const getDefaultContent = (type: string) => {
+  const toggleVisibility = (elementId: string) => {
+    const updatedElements = elements.map(el =>
+      el.id === elementId ? { ...el, visible: !el.visible } : el
+    );
+    onChange(updatedElements);
+  };
+
+  const deleteElement = (elementId: string) => {
+    const filteredElements = elements.filter(el => el.id !== elementId);
+    onChange(filteredElements);
+    showSuccess('تم حذف العنصر بنجاح');
+  };
+
+  const duplicateElement = (elementId: string) => {
+    const elementToDuplicate = elements.find(el => el.id === elementId);
+    if (elementToDuplicate) {
+      const newElement = {
+        ...elementToDuplicate,
+        id: `${elementToDuplicate.type}-${Date.now()}`,
+        order: elements.length + 1,
+      };
+      onChange([...elements, newElement]);
+      showSuccess('تم نسخ العنصر بنجاح');
+    }
+  };
+
+  const getDefaultContent = (type: LayoutElement['type']) => {
     switch (type) {
       case 'hero':
         return {
           title: 'عنوان رئيسي جديد',
           subtitle: 'عنوان فرعي',
-          description: 'وصف القسم',
-          buttonText: 'اضغط هنا'
+          description: 'وصف القسم الرئيسي',
+          buttonText: 'ابدأ الآن'
         };
       case 'services':
         return {
@@ -88,7 +127,7 @@ const DragDropLayoutEditor = ({ elements, onChange }: DragDropLayoutEditorProps)
       case 'about':
         return {
           title: 'من نحن',
-          description: 'نبذة عن الشركة'
+          description: 'معلومات عن الشركة'
         };
       case 'gallery':
         return {
@@ -107,95 +146,99 @@ const DragDropLayoutEditor = ({ elements, onChange }: DragDropLayoutEditorProps)
     }
   };
 
-  const updateElement = (id: string, updates: Partial<LayoutElement>) => {
-    const updatedElements = elements.map(el => 
-      el.id === id ? { ...el, ...updates } : el
-    );
-    onChange(updatedElements);
-  };
-
-  const deleteElement = (id: string) => {
-    const filteredElements = elements.filter(el => el.id !== id);
-    const reorderedElements = filteredElements.map((el, index) => ({
-      ...el,
-      order: index + 1
-    }));
-    onChange(reorderedElements);
-  };
-
-  const duplicateElement = (element: LayoutElement) => {
-    const newElement: LayoutElement = {
-      ...element,
-      id: `${element.type}-${Date.now()}`,
-      order: elements.length + 1,
-    };
-    onChange([...elements, newElement]);
-  };
+  const availableElements = [
+    { type: 'hero' as const, name: 'القسم الرئيسي', icon: '🏠' },
+    { type: 'services' as const, name: 'الخدمات', icon: '⚙️' },
+    { type: 'products' as const, name: 'المنتجات', icon: '📦' },
+    { type: 'about' as const, name: 'من نحن', icon: '👥' },
+    { type: 'gallery' as const, name: 'المعرض', icon: '🖼️' },
+    { type: 'contact' as const, name: 'التواصل', icon: '📞' },
+  ];
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-      {/* أدوات إضافة العناصر */}
-      <div className="xl:col-span-1">
-        <Card className="bg-slate-800/50 border-purple-500/30">
-          <CardHeader>
-            <CardTitle className="text-white">إضافة عناصر جديدة</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {availableElements.map((elementType) => (
-              <Button
-                key={elementType.type}
-                onClick={() => addElement(elementType.type)}
-                variant="outline"
-                className="w-full justify-start border-purple-500/30 text-white hover:bg-purple-600/20"
-              >
-                <span className="mr-2 text-lg">{elementType.icon}</span>
-                {elementType.name}
-              </Button>
-            ))}
-          </CardContent>
-        </Card>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4 rtl:space-x-reverse">
+          <Layout className="h-8 w-8 text-purple-400" />
+          <div>
+            <h2 className="text-2xl font-bold text-white">محرر التخطيط</h2>
+            <p className="text-gray-400">إضافة وترتيب عناصر الموقع بالسحب والإفلات</p>
+          </div>
+        </div>
       </div>
 
-      {/* منطقة تحرير التخطيط */}
-      <div className="xl:col-span-3">
-        <Card className="bg-slate-800/50 border-purple-500/30">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Layout className="h-5 w-5 mr-2" />
-              تخطيط الصفحة
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext items={elements} strategy={verticalListSortingStrategy}>
-                <div className="space-y-4 min-h-[600px]">
-                  {elements
-                    .sort((a, b) => a.order - b.order)
-                    .map((element) => (
-                      <SortableLayoutElement
-                        key={element.id}
-                        element={element}
-                        onUpdate={updateElement}
-                        onDelete={deleteElement}
-                        onDuplicate={duplicateElement}
-                      />
-                    ))}
-                  
-                  {elements.length === 0 && (
-                    <div className="text-center py-20 text-gray-400">
-                      <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>اسحب العناصر من الجانب لبناء تخطيط الصفحة</p>
-                    </div>
-                  )}
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        {/* عناصر جديدة */}
+        <div className="xl:col-span-1">
+          <Card className="bg-slate-800/50 border-purple-500/30">
+            <CardHeader>
+              <CardTitle className="text-white">إضافة عناصر</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {availableElements.map((element) => (
+                <Button
+                  key={element.type}
+                  onClick={() => addElement(element.type)}
+                  className="w-full justify-start bg-slate-700 hover:bg-purple-600/20 border border-purple-500/30"
+                  variant="outline"
+                >
+                  <span className="ml-2">{element.icon}</span>
+                  {element.name}
+                  <Plus className="h-4 w-4 mr-auto" />
+                </Button>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* عناصر التخطيط */}
+        <div className="xl:col-span-3">
+          <Card className="bg-slate-800/50 border-purple-500/30">
+            <CardHeader>
+              <CardTitle className="text-white">عناصر الموقع</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {elements.length === 0 ? (
+                <div className="text-center py-12">
+                  <Layout className="h-12 w-12 mx-auto mb-4 text-gray-400 opacity-50" />
+                  <p className="text-gray-400">لا توجد عناصر. أضف عنصراً من القائمة الجانبية</p>
                 </div>
-              </SortableContext>
-            </DndContext>
-          </CardContent>
-        </Card>
+              ) : (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragStart={handleDragStart}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext items={elements.map(el => el.id)} strategy={verticalListSortingStrategy}>
+                    <div className="space-y-3">
+                      {elements.map((element) => (
+                        <SortableLayoutElement
+                          key={element.id}
+                          element={element}
+                          onToggleVisibility={toggleVisibility}
+                          onDelete={deleteElement}
+                          onDuplicate={duplicateElement}
+                        />
+                      ))}
+                    </div>
+                  </SortableContext>
+
+                  <DragOverlay>
+                    {activeId ? (
+                      <SortableLayoutElement
+                        element={elements.find(el => el.id === activeId)!}
+                        onToggleVisibility={() => {}}
+                        onDelete={() => {}}
+                        onDuplicate={() => {}}
+                      />
+                    ) : null}
+                  </DragOverlay>
+                </DndContext>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

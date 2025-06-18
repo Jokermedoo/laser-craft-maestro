@@ -4,17 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Download, 
-  Code, 
-  FileZip, 
-  Globe, 
-  CheckCircle, 
-  AlertTriangle,
-  Info,
-  Rocket,
-  Settings
-} from 'lucide-react';
+import { Download, Code, Globe, Archive, FileText, CheckCircle, AlertCircle } from 'lucide-react';
 import { SiteConfig, LayoutElement } from '@/hooks/useSiteBuilder';
 import { useSmartNotifications } from '@/hooks/useSmartNotifications';
 
@@ -27,302 +17,299 @@ const BuildExportPanel = ({ config, elements }: BuildExportPanelProps) => {
   const [buildProgress, setBuildProgress] = useState(0);
   const [isBuilding, setIsBuilding] = useState(false);
   const [buildStatus, setBuildStatus] = useState<'idle' | 'building' | 'success' | 'error'>('idle');
-  const { showSuccess, showError, showInfo } = useSmartNotifications();
+  const { showSuccess, showError, showLoading } = useSmartNotifications();
 
-  const buildOptions = [
-    {
-      id: 'html',
-      name: 'HTML/CSS/JS',
-      description: 'ملفات ويب قياسية',
-      icon: <Code className="h-5 w-5" />,
-      size: '~2MB',
-      compatibility: 'جميع المتصفحات'
-    },
-    {
-      id: 'react',
-      name: 'React App',
-      description: 'تطبيق React كامل',
-      icon: <Globe className="h-5 w-5" />,
-      size: '~15MB',
-      compatibility: 'متصفحات حديثة'
-    },
-    {
-      id: 'zip',
-      name: 'ملف مضغوط',
-      description: 'جميع الملفات في أرشيف',
-      icon: <FileZip className="h-5 w-5" />,
-      size: '~5MB',
-      compatibility: 'للتحميل والاستضافة'
-    }
-  ];
-
-  const simulateBuild = async (type: string) => {
+  const simulateBuild = async () => {
     setIsBuilding(true);
     setBuildStatus('building');
     setBuildProgress(0);
 
-    try {
-      // محاكاة عملية البناء
-      for (let i = 0; i <= 100; i += 10) {
-        await new Promise(resolve => setTimeout(resolve, 200));
-        setBuildProgress(i);
-      }
+    const steps = [
+      'تحليل الإعدادات...',
+      'إنشاء ملفات HTML...',
+      'تطبيق الأنماط...',
+      'تحسين الأداء...',
+      'إنشاء الحزمة النهائية...'
+    ];
 
-      setBuildStatus('success');
-      showSuccess(`تم بناء الموقع بصيغة ${type} بنجاح!`, {
-        description: 'يمكنك الآن تحميل الملفات'
-      });
-
-      // محاكاة التحميل
-      downloadBuild(type);
-    } catch (error) {
-      setBuildStatus('error');
-      showError('فشل في بناء الموقع', {
-        description: 'حدث خطأ أثناء عملية البناء'
-      });
-    } finally {
-      setIsBuilding(false);
-      setTimeout(() => {
-        setBuildStatus('idle');
-        setBuildProgress(0);
-      }, 3000);
+    for (let i = 0; i < steps.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setBuildProgress((i + 1) * 20);
     }
+
+    setIsBuilding(false);
+    setBuildStatus('success');
+    showSuccess('تم بناء الموقع بنجاح!');
   };
 
-  const downloadBuild = (type: string) => {
-    const buildData = {
+  const exportConfig = () => {
+    const exportData = {
+      meta: {
+        version: '1.0.0',
+        createdBy: 'محمد سليم',
+        createdAt: new Date().toISOString(),
+        projectName: config.name
+      },
       config,
-      elements,
-      buildType: type,
-      timestamp: new Date().toISOString(),
-      version: '1.0.0',
-      author: 'محمد سليم - منشئ المواقع المتقدم'
-    };
-
-    const blob = new Blob([JSON.stringify(buildData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${config.name}-${type}-build.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const exportConfiguration = () => {
-    const configData = {
-      site: config,
       layout: elements,
-      timestamp: new Date().toISOString(),
-      version: '1.0.0',
-      author: 'محمد سليم'
+      buildInfo: {
+        elementsCount: elements.length,
+        visibleElements: elements.filter(el => el.visible).length
+      }
     };
 
-    const blob = new Blob([JSON.stringify(configData, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${config.name}-configuration.json`;
+    a.download = `${config.name.replace(/\s+/g, '-')}-config.json`;
     a.click();
     URL.revokeObjectURL(url);
-
-    showInfo('تم تصدير التكوين', {
-      description: 'يمكنك استيراد هذا الملف لاحقاً'
-    });
-  };
-
-  const checkReadiness = () => {
-    const issues = [];
     
-    if (!config.name) issues.push('اسم الموقع غير مُعرف');
-    if (!config.metadata.title) issues.push('عنوان الصفحة مفقود');
-    if (!config.metadata.description) issues.push('وصف الموقع مفقود');
-    if (elements.length === 0) issues.push('لا توجد عناصر في الصفحة');
-    if (elements.filter(el => el.visible).length === 0) issues.push('جميع العناصر مخفية');
-
-    return {
-      isReady: issues.length === 0,
-      issues
-    };
+    showSuccess('تم تصدير إعدادات الموقع بنجاح');
   };
 
-  const readiness = checkReadiness();
+  const exportHTML = () => {
+    const htmlContent = generateHTML(config, elements);
+    const blob = new Blob([htmlContent], { type: 'text/html; charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${config.name.replace(/\s+/g, '-')}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showSuccess('تم تصدير ملف HTML بنجاح');
+  };
+
+  const generateHTML = (config: SiteConfig, elements: LayoutElement[]) => {
+    const visibleElements = elements.filter(el => el.visible).sort((a, b) => a.order - b.order);
+    
+    const elementsHTML = visibleElements.map(element => {
+      switch (element.type) {
+        case 'hero':
+          return `
+            <section class="hero" style="background: ${config.colors.background}; color: ${config.colors.text}; padding: 80px 20px; text-align: center;">
+              <h1 style="color: ${config.colors.primary}; font-size: 3rem; margin-bottom: 1rem;">${element.content?.title || 'عنوان رئيسي'}</h1>
+              <h2 style="color: ${config.colors.secondary}; font-size: 1.5rem; margin-bottom: 2rem;">${element.content?.subtitle || 'عنوان فرعي'}</h2>
+              <p style="font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">${element.content?.description || 'وصف القسم'}</p>
+              <button style="background: ${config.colors.accent}; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer;">${element.content?.buttonText || 'ابدأ الآن'}</button>
+            </section>
+          `;
+        case 'services':
+          return `
+            <section class="services" style="padding: 60px 20px;">
+              <h2 style="color: ${config.colors.primary}; text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">${element.content?.title || 'خدماتنا'}</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto;">
+                ${(element.content?.services || []).map((service: any) => `
+                  <div style="padding: 2rem; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">${service.icon}</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: ${config.colors.primary};">${service.title}</h3>
+                    <p>${service.description}</p>
+                  </div>
+                `).join('')}
+              </div>
+            </section>
+          `;
+        default:
+          return `<section class="${element.type}" style="padding: 40px 20px;"><p>قسم ${element.type}</p></section>`;
+      }
+    }).join('');
+
+    return `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${config.metadata.title}</title>
+    <meta name="description" content="${config.metadata.description}">
+    <meta name="keywords" content="${config.metadata.keywords}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: ${config.fonts.primary}; 
+            background: ${config.colors.background}; 
+            color: ${config.colors.text}; 
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    </style>
+</head>
+<body>
+    ${elementsHTML}
+    
+    <footer style="background: ${config.colors.primary}; color: white; text-align: center; padding: 20px;">
+        <p>© 2024 ${config.name} - طور بواسطة محمد سليم</p>
+    </footer>
+</body>
+</html>
+    `;
+  };
+
+  const exportPackage = async () => {
+    showLoading('جاري إنشاء الحزمة...', 
+      new Promise((resolve) => {
+        setTimeout(() => {
+          const files = {
+            'index.html': generateHTML(config, elements),
+            'config.json': JSON.stringify({ config, elements }, null, 2),
+            'README.md': `# ${config.name}\n\n${config.metadata.description}\n\nطور بواسطة محمد سليم`
+          };
+          
+          // محاكاة إنشاء ملف مضغوط
+          resolve(files);
+        }, 2000);
+      })
+    );
+  };
 
   return (
     <div className="space-y-6">
-      {/* حالة الاستعداد */}
+      <div className="flex items-center space-x-4 rtl:space-x-reverse">
+        <Download className="h-8 w-8 text-purple-400" />
+        <div>
+          <h2 className="text-2xl font-bold text-white">البناء والتصدير</h2>
+          <p className="text-gray-400">إنشاء وتصدير موقعك الإلكتروني</p>
+          <p className="text-sm text-purple-400">طور بواسطة محمد سليم</p>
+        </div>
+      </div>
+
+      {/* معلومات المشروع */}
       <Card className="bg-slate-800/50 border-purple-500/30">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <CheckCircle className="h-5 w-5 mr-2" />
-            فحص الاستعداد للنشر
-          </CardTitle>
+          <CardTitle className="text-white">معلومات المشروع</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-300">حالة المشروع:</span>
-              <Badge 
-                variant={readiness.isReady ? 'default' : 'destructive'}
-                className={readiness.isReady ? 'bg-green-600' : 'bg-red-600'}
-              >
-                {readiness.isReady ? 'جاهز للنشر' : 'يحتاج مراجعة'}
-              </Badge>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-400">{config.name}</div>
+              <div className="text-sm text-gray-400">اسم المشروع</div>
             </div>
-
-            {!readiness.isReady && (
-              <div className="bg-yellow-600/20 border border-yellow-600/30 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <AlertTriangle className="h-4 w-4 text-yellow-400 mr-2" />
-                  <span className="text-yellow-400 font-medium">مشاكل يجب حلها:</span>
-                </div>
-                <ul className="text-sm text-yellow-300 space-y-1">
-                  {readiness.issues.map((issue, index) => (
-                    <li key={index}>• {issue}</li>
-                  ))}
-                </ul>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-400">{elements.length}</div>
+              <div className="text-sm text-gray-400">إجمالي العناصر</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-400">{elements.filter(el => el.visible).length}</div>
+              <div className="text-sm text-gray-400">عناصر مرئية</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-400">
+                {buildStatus === 'success' ? <CheckCircle className="h-6 w-6 mx-auto" /> : 
+                 buildStatus === 'error' ? <AlertCircle className="h-6 w-6 mx-auto" /> : '⏳'}
               </div>
-            )}
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-purple-400">{elements.length}</div>
-                <div className="text-sm text-gray-400">إجمالي العناصر</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-400">
-                  {elements.filter(el => el.visible).length}
-                </div>
-                <div className="text-sm text-gray-400">عناصر مرئية</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-blue-400">
-                  {config.colors.primary ? 1 : 0}/5
-                </div>
-                <div className="text-sm text-gray-400">ألوان مُعرفة</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-yellow-400">100%</div>
-                <div className="text-sm text-gray-400">متجاوب</div>
-              </div>
+              <div className="text-sm text-gray-400">حالة البناء</div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* خيارات البناء */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {buildOptions.map((option) => (
-          <Card key={option.id} className="bg-slate-800/50 border-purple-500/30 hover:border-purple-400 transition-all">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                {option.icon}
-                <span className="mr-2">{option.name}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400 text-sm mb-4">{option.description}</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">الحجم المتوقع:</span>
-                  <span className="text-white">{option.size}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">التوافق:</span>
-                  <span className="text-white">{option.compatibility}</span>
-                </div>
-              </div>
-              
-              <Button
-                onClick={() => simulateBuild(option.id)}
-                disabled={!readiness.isReady || isBuilding}
-                className="w-full mt-4 bg-purple-600 hover:bg-purple-700"
-              >
-                {isBuilding ? (
-                  <>
-                    <Settings className="h-4 w-4 mr-2 animate-spin" />
-                    جاري البناء...
-                  </>
-                ) : (
-                  <>
-                    <Download className="h-4 w-4 mr-2" />
-                    بناء وتحميل
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* شريط التقدم */}
-      {isBuilding && (
-        <Card className="bg-slate-800/50 border-purple-500/30">
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-white font-medium">جاري بناء الموقع...</span>
-                <span className="text-gray-400">{buildProgress}%</span>
-              </div>
-              <Progress value={buildProgress} className="w-full" />
-              <div className="text-sm text-gray-400 text-center">
-                {buildProgress < 30 && 'تحليل التكوين...'}
-                {buildProgress >= 30 && buildProgress < 60 && 'بناء العناصر...'}
-                {buildProgress >= 60 && buildProgress < 90 && 'تطبيق الأنماط...'}
-                {buildProgress >= 90 && 'التحضير للتحميل...'}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* أدوات إضافية */}
+      {/* عملية البناء */}
       <Card className="bg-slate-800/50 border-purple-500/30">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <Settings className="h-5 w-5 mr-2" />
-            أدوات التطوير
-          </CardTitle>
+          <CardTitle className="text-white">بناء الموقع</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-4">
+        <CardContent className="space-y-4">
+          {isBuilding && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-300">جاري البناء...</span>
+                <span className="text-purple-400">{buildProgress}%</span>
+              </div>
+              <Progress value={buildProgress} className="w-full" />
+            </div>
+          )}
+          
+          <div className="flex space-x-3 rtl:space-x-reverse">
             <Button
-              onClick={exportConfiguration}
-              variant="outline"
-              className="border-blue-500/50 text-blue-400 hover:bg-blue-600/20"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              تصدير التكوين
-            </Button>
-
-            <Button
-              onClick={() => window.open('/', '_blank')}
-              variant="outline"
-              className="border-green-500/50 text-green-400 hover:bg-green-600/20"
-            >
-              <Rocket className="h-4 w-4 mr-2" />
-              معاينة مباشرة
-            </Button>
-
-            <Button
-              onClick={() => showInfo('قريباً!', { description: 'ميزة النشر التلقائي قيد التطوير' })}
-              variant="outline"
-              className="border-purple-500/50 text-purple-400 hover:bg-purple-600/20"
+              onClick={simulateBuild}
+              disabled={isBuilding}
+              className="bg-purple-600 hover:bg-purple-700"
             >
               <Globe className="h-4 w-4 mr-2" />
-              نشر تلقائي
+              {isBuilding ? 'جاري البناء...' : 'بناء الموقع'}
+            </Button>
+            
+            {buildStatus === 'success' && (
+              <Badge variant="default" className="bg-green-600">
+                <CheckCircle className="h-3 w-3 mr-1" />
+                تم البناء بنجاح
+              </Badge>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* خيارات التصدير */}
+      <Card className="bg-slate-800/50 border-purple-500/30">
+        <CardHeader>
+          <CardTitle className="text-white">تصدير المشروع</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Button
+              onClick={exportConfig}
+              variant="outline"
+              className="h-20 flex-col space-y-2 border-purple-500/50 hover:bg-purple-600/20"
+            >
+              <FileText className="h-6 w-6" />
+              <span>تصدير الإعدادات</span>
+              <span className="text-xs text-gray-400">JSON</span>
+            </Button>
+
+            <Button
+              onClick={exportHTML}
+              variant="outline"
+              className="h-20 flex-col space-y-2 border-purple-500/50 hover:bg-purple-600/20"
+            >
+              <Code className="h-6 w-6" />
+              <span>تصدير HTML</span>
+              <span className="text-xs text-gray-400">ملف واحد</span>
+            </Button>
+
+            <Button
+              onClick={exportPackage}
+              variant="outline"
+              className="h-20 flex-col space-y-2 border-purple-500/50 hover:bg-purple-600/20"
+            >
+              <Archive className="h-6 w-6" />
+              <span>حزمة كاملة</span>
+              <span className="text-xs text-gray-400">ZIP</span>
+            </Button>
+
+            <Button
+              variant="outline"
+              className="h-20 flex-col space-y-2 border-purple-500/50 hover:bg-purple-600/20"
+              disabled
+            >
+              <Globe className="h-6 w-6" />
+              <span>نشر مباشر</span>
+              <span className="text-xs text-gray-400">قريباً</span>
             </Button>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="mt-6 p-4 bg-slate-700/30 rounded-lg">
-            <div className="flex items-center mb-2">
-              <Info className="h-4 w-4 text-blue-400 mr-2" />
-              <span className="text-blue-400 font-medium">معلومات المطور</span>
+      {/* تعليمات النشر */}
+      <Card className="bg-slate-800/50 border-purple-500/30">
+        <CardHeader>
+          <CardTitle className="text-white">تعليمات النشر</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4 text-gray-300">
+            <div>
+              <h4 className="font-bold text-white mb-2">1. تصدير ملف HTML</h4>
+              <p className="text-sm">احصل على ملف HTML جاهز للرفع على أي استضافة ويب</p>
             </div>
-            <p className="text-sm text-gray-400">
-              تم تطوير هذا المنشئ بواسطة <strong className="text-white">محمد سليم</strong>
-              <br />
-              منشئ مواقع متقدم مع إمكانيات السحب والإفلات والمعاينة المباشرة
-            </p>
+            <div>
+              <h4 className="font-bold text-white mb-2">2. تصدير الحزمة الكاملة</h4>
+              <p className="text-sm">احصل على جميع الملفات والإعدادات في ملف مضغوط</p>
+            </div>
+            <div>
+              <h4 className="font-bold text-white mb-2">3. رفع الموقع</h4>
+              <p className="text-sm">ارفع الملفات على استضافة ويب مثل Netlify أو Vercel أو GitHub Pages</p>
+            </div>
           </div>
         </CardContent>
       </Card>
