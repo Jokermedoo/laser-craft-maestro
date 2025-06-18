@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Bell, Send, MessageSquare, Mail, Smartphone, Clock, CheckCircle, XCircle, Trash2, MarkAsRead } from 'lucide-react';
+import { Bell, Send, MessageSquare, Mail, Smartphone, Clock, CheckCircle, XCircle, Trash2, Check } from 'lucide-react';
 import { useSmartNotifications } from '@/hooks/useSmartNotifications';
 import AnimatedContainer from '@/components/enhanced/AnimatedContainer';
 
@@ -108,7 +107,7 @@ const EnhancedNotificationCenter = () => {
               className="border-purple-500/50 text-purple-400"
               disabled={getUnreadCount() === 0}
             >
-              <MarkAsRead className="h-4 w-4 ml-2" />
+              <Check className="h-4 w-4 ml-2" />
               قرأت الكل
             </Button>
             <Button 

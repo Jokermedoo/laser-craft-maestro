@@ -97,9 +97,11 @@ export const useSmartNotifications = () => {
     });
   };
 
-  const showCustom = (content: React.ReactNode, options?: NotificationOptions) => {
-    toast.custom(content, {
+  const showCustom = (message: string, options?: NotificationOptions) => {
+    addToHistory('info', message);
+    toast(message, {
       duration: options?.duration || 4000,
+      description: options?.description,
     });
   };
 
