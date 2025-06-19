@@ -4,73 +4,147 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAdmin } from '@/contexts/AdminContext';
-import { Plus, Edit, Trash2, Image, Upload } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { Plus, Edit, Trash2, Image, Upload, Loader2 } from 'lucide-react';
+import { useGalleryData } from '@/hooks/useSupabaseData';
+import { useImageUpload } from '@/hooks/useImageUpload';
+import { useToast } from '@/components/ui/use-toast';
+
+interface GalleryFormData {
+  title: string;
+  description: string;
+  category: string;
+  featured: boolean;
+  image_url: string;
+}
 
 const GalleryManager = () => {
-  const { settings, updateGallery } = useAdmin();
-  const [gallery, setGallery] = useState(settings.gallery);
-  const [editingItem, setEditingItem] = useState<any>(null);
+  const { items, loading, addItem, updateItem, deleteItem } = useGalleryData();
+  const { uploadImage, uploading } = useImageUpload();
+  const { toast } = useToast();
+  
+  const [editingItem, setEditingItem] = useState<string | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
-
-  const defaultGalleryItem = {
-    id: '',
+  const [formData, setFormData] = useState<GalleryFormData>({
     title: '',
     description: '',
-    image: '',
-    category: 'لوحات إعلانية'
+    category: 'نقش',
+    featured: false,
+    image_url: ''
+  });
+
+  const categories = ['نقش', 'تقطيع', 'دروع', 'لوحات', 'خط عربي', 'هدايا', 'أخرى'];
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      description: '',
+      category: 'نقش',
+      featured: false,
+      image_url: ''
+    });
+    setEditingItem(null);
+    setIsAddingNew(false);
   };
 
-  const [newItem, setNewItem] = useState(defaultGalleryItem);
-
-  const categories = [
-    'لوحات إعلانية',
-    'نقش على المعادن',
-    'نقش على الخشب',
-    'نقش على الأكريليك',
-    'هدايا مخصصة',
-    'مجوهرات',
-    'قطع تذكارية',
-    'أخرى'
-  ];
-
-  const handleAddItem = () => {
-    if (newItem.title && newItem.description && newItem.image) {
-      const itemWithId = {
-        ...newItem,
-        id: Date.now().toString()
-      };
-      const updatedGallery = [...gallery, itemWithId];
-      setGallery(updatedGallery);
-      updateGallery(updatedGallery);
-      setNewItem(defaultGalleryItem);
-      setIsAddingNew(false);
+  const handleImageUpload = async (file: File) => {
+    const result = await uploadImage(file, 'gallery');
+    if (result.success) {
+      setFormData(prev => ({ ...prev, image_url: result.url }));
+      toast({
+        title: "تم رفع الصورة بنجاح",
+        description: "يمكنك الآن حفظ العنصر",
+      });
+    } else {
+      toast({
+        title: "خطأ في رفع الصورة",
+        description: "حدث خطأ أثناء رفع الصورة، يرجى المحاولة مرة أخرى",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleEditItem = (item: any) => {
-    setEditingItem(item);
-  };
+  const handleSubmit = async () => {
+    if (!formData.title || !formData.image_url) {
+      toast({
+        title: "بيانات ناقصة",
+        description: "يرجى إدخال العنوان والصورة على الأقل",
+        variant: "destructive",
+      });
+      return;
+    }
 
-  const handleUpdateItem = () => {
     if (editingItem) {
-      const updatedGallery = gallery.map(item => 
-        item.id === editingItem.id ? editingItem : item
-      );
-      setGallery(updatedGallery);
-      updateGallery(updatedGallery);
-      setEditingItem(null);
+      const result = await updateItem(editingItem, formData);
+      if (result.success) {
+        toast({
+          title: "تم التحديث بنجاح",
+          description: "تم تحديث العنصر في المعرض",
+        });
+        resetForm();
+      } else {
+        toast({
+          title: "خطأ في التحديث",
+          description: "حدث خطأ أثناء التحديث",
+          variant: "destructive",
+        });
+      }
+    } else {
+      const result = await addItem(formData);
+      if (result.success) {
+        toast({
+          title: "تم الإضافة بنجاح",
+          description: "تم إضافة العنصر الجديد للمعرض",
+        });
+        resetForm();
+      } else {
+        toast({
+          title: "خطأ في الإضافة",
+          description: "حدث خطأ أثناء الإضافة",
+          variant: "destructive",
+        });
+      }
     }
   };
 
-  const handleDeleteItem = (itemId: string) => {
+  const handleEdit = (item: any) => {
+    setFormData({
+      title: item.title,
+      description: item.description || '',
+      category: item.category,
+      featured: item.featured,
+      image_url: item.image_url || ''
+    });
+    setEditingItem(item.id);
+    setIsAddingNew(true);
+  };
+
+  const handleDelete = async (id: string) => {
     if (confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
-      const updatedGallery = gallery.filter(item => item.id !== itemId);
-      setGallery(updatedGallery);
-      updateGallery(updatedGallery);
+      const result = await deleteItem(id);
+      if (result.success) {
+        toast({
+          title: "تم الحذف بنجاح",
+          description: "تم حذف العنصر من المعرض",
+        });
+      } else {
+        toast({
+          title: "خطأ في الحذف",
+          description: "حدث خطأ أثناء الحذف",
+          variant: "destructive",
+        });
+      }
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-purple-400" />
+        <span className="mr-2 text-white">جاري تحميل البيانات...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -91,32 +165,139 @@ const GalleryManager = () => {
         </Button>
       </div>
 
-      {/* معرض الأعمال الحالية */}
+      {/* Form for adding/editing */}
+      {isAddingNew && (
+        <Card className="bg-slate-800/50 border-green-500/30">
+          <CardHeader>
+            <CardTitle className="text-white">
+              {editingItem ? 'تعديل العمل' : 'إضافة عمل جديد'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-gray-300">عنوان العمل</Label>
+                <Input
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  className="bg-slate-700 border-gray-600 text-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">التصنيف</Label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                  className="w-full p-2 bg-slate-700 border border-gray-600 text-white rounded-md"
+                >
+                  {categories.map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-gray-300">وصف العمل</Label>
+              <Textarea
+                value={formData.description}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                className="bg-slate-700 border-gray-600 text-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-gray-300">رفع الصورة</Label>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleImageUpload(file);
+                  }}
+                  className="bg-slate-700 border-gray-600 text-white"
+                  disabled={uploading}
+                />
+                {uploading && <Loader2 className="h-4 w-4 animate-spin text-purple-400" />}
+              </div>
+            </div>
+
+            {formData.image_url && (
+              <div className="space-y-2">
+                <Label className="text-gray-300">معاينة الصورة</Label>
+                <div className="aspect-video max-w-md">
+                  <img 
+                    src={formData.image_url} 
+                    alt="معاينة"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center space-x-2 rtl:space-x-reverse">
+              <input
+                type="checkbox"
+                id="featured"
+                checked={formData.featured}
+                onChange={(e) => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
+                className="w-4 h-4 text-purple-600"
+              />
+              <Label htmlFor="featured" className="text-gray-300">عمل مميز</Label>
+            </div>
+
+            <div className="flex space-x-4 rtl:space-x-reverse">
+              <Button 
+                onClick={handleSubmit} 
+                className="bg-green-600 hover:bg-green-700"
+                disabled={uploading}
+              >
+                {editingItem ? 'حفظ التغييرات' : 'إضافة العمل'}
+              </Button>
+              <Button 
+                onClick={resetForm}
+                variant="outline"
+                className="border-gray-500/50 text-gray-400"
+              >
+                إلغاء
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Gallery items grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {gallery.map((item) => (
+        {items.map((item) => (
           <Card key={item.id} className="bg-slate-800/50 border-purple-500/30 overflow-hidden">
             <div className="aspect-video relative">
               <img 
-                src={item.image} 
+                src={item.image_url || '/placeholder.svg'} 
                 alt={item.title}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center space-x-2 rtl:space-x-reverse">
                 <Button
                   size="sm"
-                  onClick={() => handleEditItem(item)}
+                  onClick={() => handleEdit(item)}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
                   <Edit className="h-4 w-4" />
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => handleDeleteItem(item.id)}
+                  onClick={() => handleDelete(item.id)}
                   className="bg-red-600 hover:bg-red-700"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
+              {item.featured && (
+                <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold">
+                  مميز
+                </div>
+              )}
             </div>
             <CardContent className="p-4">
               <h3 className="text-white font-bold mb-2">{item.title}</h3>
@@ -129,186 +310,11 @@ const GalleryManager = () => {
         ))}
       </div>
 
-      {/* نموذج إضافة عمل جديد */}
-      {isAddingNew && (
-        <Card className="bg-slate-800/50 border-green-500/30">
-          <CardHeader>
-            <CardTitle className="text-white">إضافة عمل جديد</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-gray-300">عنوان العمل</Label>
-                <Input
-                  value={newItem.title}
-                  onChange={(e) => setNewItem({...newItem, title: e.target.value})}
-                  className="bg-slate-700 border-gray-600 text-white"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-gray-300">التصنيف</Label>
-                <select
-                  value={newItem.category}
-                  onChange={(e) => setNewItem({...newItem, category: e.target.value})}
-                  className="w-full p-2 bg-slate-700 border border-gray-600 text-white rounded-md"
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label className="text-gray-300">وصف العمل</Label>
-              <Textarea
-                value={newItem.description}
-                onChange={(e) => setNewItem({...newItem, description: e.target.value})}
-                className="bg-slate-700 border-gray-600 text-white"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-gray-300">رابط الصورة</Label>
-              <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <Input
-                  value={newItem.image}
-                  onChange={(e) => setNewItem({...newItem, image: e.target.value})}
-                  className="bg-slate-700 border-gray-600 text-white"
-                  placeholder="https://example.com/image.jpg"
-                />
-                <Button 
-                  variant="outline"
-                  className="border-purple-500/50 text-purple-400"
-                >
-                  <Upload className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-gray-500 text-xs">يمكنك رفع الصورة أو إدخال رابط مباشر</p>
-            </div>
-
-            {/* معاينة الصورة */}
-            {newItem.image && (
-              <div className="space-y-2">
-                <Label className="text-gray-300">معاينة الصورة</Label>
-                <div className="aspect-video max-w-md">
-                  <img 
-                    src={newItem.image} 
-                    alt="معاينة"
-                    className="w-full h-full object-cover rounded-lg"
-                    onError={(e) => {
-                      e.currentTarget.src = 'https://via.placeholder.com/400x225?text=الصورة+غير+متاحة';
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="flex space-x-4 rtl:space-x-reverse">
-              <Button onClick={handleAddItem} className="bg-green-600 hover:bg-green-700">
-                حفظ العمل
-              </Button>
-              <Button 
-                onClick={() => {
-                  setIsAddingNew(false);
-                  setNewItem(defaultGalleryItem);
-                }}
-                variant="outline"
-                className="border-gray-500/50 text-gray-400"
-              >
-                إلغاء
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+      {items.length === 0 && (
+        <div className="text-center py-8">
+          <p className="text-gray-400">لا توجد أعمال في المعرض حالياً</p>
+        </div>
       )}
-
-      {/* نموذج تعديل العمل */}
-      {editingItem && (
-        <Card className="bg-slate-800/50 border-blue-500/30">
-          <CardHeader>
-            <CardTitle className="text-white">تعديل العمل</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-gray-300">عنوان العمل</Label>
-                <Input
-                  value={editingItem.title}
-                  onChange={(e) => setEditingItem({...editingItem, title: e.target.value})}
-                  className="bg-slate-700 border-gray-600 text-white"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-gray-300">التصنيف</Label>
-                <select
-                  value={editingItem.category}
-                  onChange={(e) => setEditingItem({...editingItem, category: e.target.value})}
-                  className="w-full p-2 bg-slate-700 border border-gray-600 text-white rounded-md"
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label className="text-gray-300">وصف العمل</Label>
-              <Textarea
-                value={editingItem.description}
-                onChange={(e) => setEditingItem({...editingItem, description: e.target.value})}
-                className="bg-slate-700 border-gray-600 text-white"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-gray-300">رابط الصورة</Label>
-              <Input
-                value={editingItem.image}
-                onChange={(e) => setEditingItem({...editingItem, image: e.target.value})}
-                className="bg-slate-700 border-gray-600 text-white"
-              />
-            </div>
-
-            <div className="flex space-x-4 rtl:space-x-reverse">
-              <Button onClick={handleUpdateItem} className="bg-blue-600 hover:bg-blue-700">
-                حفظ التغييرات
-              </Button>
-              <Button 
-                onClick={() => setEditingItem(null)}
-                variant="outline"
-                className="border-gray-500/50 text-gray-400"
-              >
-                إلغاء
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* إحصائيات المعرض */}
-      <Card className="bg-slate-800/50 border-purple-500/30">
-        <CardHeader>
-          <CardTitle className="text-white">إحصائيات المعرض</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">{gallery.length}</div>
-              <div className="text-gray-400">إجمالي الأعمال</div>
-            </div>
-            {categories.slice(0, 3).map(category => (
-              <div key={category} className="text-center">
-                <div className="text-2xl font-bold text-purple-400">
-                  {gallery.filter(item => item.category === category).length}
-                </div>
-                <div className="text-gray-400">{category}</div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

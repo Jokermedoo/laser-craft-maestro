@@ -9,7 +9,159 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      admin_users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          last_login: string | null
+          name: string
+          password_hash: string
+          role: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          last_login?: string | null
+          name: string
+          password_hash: string
+          role?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          last_login?: string | null
+          name?: string
+          password_hash?: string
+          role?: string | null
+        }
+        Relationships: []
+      }
+      company_info: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          facebook_url: string | null
+          id: string
+          instagram_url: string | null
+          name: string
+          phone: string | null
+          updated_at: string | null
+          website: string | null
+          whatsapp: string | null
+          working_hours: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          facebook_url?: string | null
+          id?: string
+          instagram_url?: string | null
+          name: string
+          phone?: string | null
+          updated_at?: string | null
+          website?: string | null
+          whatsapp?: string | null
+          working_hours?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          facebook_url?: string | null
+          id?: string
+          instagram_url?: string | null
+          name?: string
+          phone?: string | null
+          updated_at?: string | null
+          website?: string | null
+          whatsapp?: string | null
+          working_hours?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
+      gallery_items: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          description: string | null
+          featured: boolean | null
+          id: string
+          image_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          image_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          image_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          features: string[] | null
+          gradient: string | null
+          icon: string | null
+          id: string
+          popular: boolean | null
+          price: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          features?: string[] | null
+          gradient?: string | null
+          icon?: string | null
+          id?: string
+          popular?: boolean | null
+          price?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          features?: string[] | null
+          gradient?: string | null
+          icon?: string | null
+          id?: string
+          popular?: boolean | null
+          price?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
